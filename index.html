@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Influencer Prompt Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --surface: #161616;
+    --surface2: #1e1e1e;
+    --border: #2a2a2a;
+    --accent: #7c3aed;
+    --accent-glow: rgba(124,58,237,0.3);
+    --accent-light: #9d5ff5;
+    --text: #f0f0f0;
+    --muted: #888;
+    --radius: 12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  .page { position: relative; z-index: 1; }
+
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 80px 24px 60px;
+    position: relative;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse at 50% 20%, rgba(124,58,237,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .badge {
+    display: inline-block;
+    background: rgba(124,58,237,0.15);
+    border: 1px solid rgba(124,58,237,0.4);
+    color: var(--accent-light);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    max-width: 780px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  h1 span {
+    background: linear-gradient(135deg, #9d5ff5, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    color: var(--muted);
+    font-weight: 400;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  /* ── CONTAINER ── */
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ── FORM CARD ── */
+  .form-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .form-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(124,58,237,0.6), transparent);
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-card { padding: 24px; }
+  }
+
+  .field { display: flex; flex-direction: column; gap: 8px; }
+
+  label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  select, input[type="text"] {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    padding: 12px 16px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
+    cursor: pointer;
+  }
+
+  select:focus, input[type="text"]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+
+  select option { background: #1e1e1e; }
+
+  /* ── GENERATE BUTTON ── */
+  .btn-generate {
+    width: 100%;
+    background: linear-gradient(135deg, #7c3aed, #9333ea);
+    border: none;
+    border-radius: var(--radius);
+    color: #fff;
+    font-family: 'Syne', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 16px 32px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.2s, filter 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-generate::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .btn-generate:hover { filter: brightness(1.1); box-shadow: 0 8px 32px rgba(124,58,237,0.45); transform: translateY(-1px); }
+  .btn-generate:hover::after { opacity: 1; }
+  .btn-generate:active { transform: translateY(0); }
+
+  .btn-generate .icon { margin-right: 8px; font-size: 18px; }
+
+  /* ── OUTPUT SECTION ── */
+  #output { display: none; margin-bottom: 40px; }
+
+  .output-header {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+  }
+
+  .prompt-cards { display: flex; flex-direction: column; gap: 16px; }
+
+  .prompt-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .prompt-card:nth-child(2) { animation-delay: 0.1s; }
+  .prompt-card:nth-child(3) { animation-delay: 0.2s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .prompt-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0; width: 3px;
+    background: linear-gradient(to bottom, #7c3aed, #c084fc);
+    border-radius: 3px 0 0 3px;
+  }
+
+  .prompt-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    background: rgba(124,58,237,0.12);
+    border: 1px solid rgba(124,58,237,0.25);
+    padding: 3px 10px;
+    border-radius: 100px;
+    margin-bottom: 12px;
+  }
+
+  .prompt-text {
+    font-size: 14px;
+    line-height: 1.75;
+    color: #ccc;
+    margin-bottom: 16px;
+  }
+
+  .btn-copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+
+  .btn-copy:hover { background: rgba(124,58,237,0.15); border-color: var(--accent); color: var(--accent-light); }
+  .btn-copy.copied { background: rgba(124,58,237,0.2); border-color: var(--accent); color: #c084fc; }
+
+  /* ── AFFILIATE SECTION ── */
+  #affiliates { display: none; margin-bottom: 48px; }
+
+  .aff-header {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+
+  .aff-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  @media (max-width: 600px) { .aff-grid { grid-template-columns: 1fr; } }
+
+  .btn-aff {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 14px 16px;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    transition: transform 0.15s, box-shadow 0.2s, filter 0.2s;
+    line-height: 1.3;
+  }
+
+  .btn-aff:hover { transform: translateY(-2px); filter: brightness(1.08); }
+
+  .btn-aff-purple {
+    background: linear-gradient(135deg, #7c3aed, #9333ea);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(124,58,237,0.3);
+  }
+
+  .btn-aff-dark {
+    background: var(--surface2);
+    color: var(--text);
+    border-color: var(--border);
+  }
+
+  .btn-aff-dark:hover { border-color: rgba(124,58,237,0.4); box-shadow: 0 4px 20px rgba(124,58,237,0.15); }
+
+  .aff-disclaimer {
+    font-size: 12px;
+    color: #555;
+    text-align: center;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px;
+    text-align: center;
+    color: #444;
+    font-size: 13px;
+  }
+
+  footer span { color: #666; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="badge">✦ Free AI Tool — No Sign-Up Needed</div>
+    <h1>Stop Making <span>Fake-Looking</span><br>AI Influencers</h1>
+    <p class="subtitle">Generate Ultra-Realistic Prompts in 30 Seconds — Free</p>
+  </header>
+
+  <div class="container">
+
+    <!-- FORM -->
+    <div class="form-card">
+      <div class="form-grid">
+
+        <div class="field">
+          <label>Age Range</label>
+          <select id="age">
+            <option value="18-24">18–24</option>
+            <option value="25-34">25–34</option>
+            <option value="35-44">35–44</option>
+            <option value="45+">45+</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Skin Tone</label>
+          <select id="skin">
+            <option value="fair, porcelain skin with subtle undertones">Fair / Light</option>
+            <option value="light medium skin tone with warm undertones">Light Medium</option>
+            <option value="medium olive complexion with golden undertones">Medium</option>
+            <option value="medium brown skin with rich warm undertones">Medium Brown</option>
+            <option value="deep brown skin with luminous undertones">Deep Brown</option>
+            <option value="deep ebony complexion with striking cool undertones">Deep</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Hair Description</label>
+          <input type="text" id="hair" placeholder="e.g. long black wavy hair" />
+        </div>
+
+        <div class="field">
+          <label>Creator Style</label>
+          <select id="style">
+            <option value="lifestyle blogger, effortlessly casual yet aspirational look">Lifestyle Blogger</option>
+            <option value="fitness creator, athletic and energetic aesthetic">Fitness Creator</option>
+            <option value="fashion influencer, high-end editorial style">Fashion Influencer</option>
+            <option value="travel creator, adventurous and wanderlust feel">Travel Creator</option>
+            <option value="business creator, polished professional look">Business Creator</option>
+            <option value="beauty creator, glam and editorial makeup aesthetic">Beauty Creator</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Background Setting</label>
+          <select id="bg">
+            <option value="clean studio white background, seamless backdrop, professional lighting setup">Studio White Background</option>
+            <option value="outdoor golden hour setting, warm amber sunlight, lens flare, bokeh greenery">Outdoor Golden Hour</option>
+            <option value="urban street environment, city lights, gritty concrete textures">Urban Street</option>
+            <option value="luxury interior, soft warm ambient light, marble and velvet textures">Luxury Interior</option>
+            <option value="tropical beach, turquoise water, bright natural sunlight, sand">Tropical Beach</option>
+            <option value="cosy cafe interior, warm window light, wooden textures, coffee steam">Cosy Cafe</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Camera Mood</label>
+          <select id="mood">
+            <option value="candid and natural moment, spontaneous feel, slight motion energy">Candid and Natural</option>
+            <option value="editorial and polished, deliberate composition, fashion-magazine quality">Editorial and Polished</option>
+            <option value="raw and authentic, unposed, documentary-style energy">Raw and Authentic</option>
+            <option value="cinematic and dramatic, deep shadows, high contrast, moody atmosphere">Cinematic and Dramatic</option>
+          </select>
+        </div>
+
+      </div>
+
+      <button class="btn-generate" onclick="generatePrompts()">
+        <span class="icon">⚡</span> Generate My Prompts
+      </button>
+    </div>
+
+    <!-- OUTPUT -->
+    <div id="output">
+      <div class="output-header">✦ Your Prompts</div>
+      <div class="prompt-cards" id="promptCards"></div>
+    </div>
+
+    <!-- AFFILIATES -->
+    <div id="affiliates">
+      <div class="aff-header">✦ Put Your Prompt to Work</div>
+      <div class="aff-grid">
+        <a href="https://leonardo.ai" target="_blank" rel="noopener" class="btn-aff btn-aff-purple">
+          🎨 Generate This Image Free<br><span style="font-weight:400;font-size:12px;opacity:0.85">via Leonardo AI</span>
+        </a>
+        <a href="https://heygen.com" target="_blank" rel="noopener" class="btn-aff btn-aff-dark">
+          🎬 Animate Your Influencer<br><span style="font-weight:400;font-size:12px;color:var(--muted)">with HeyGen</span>
+        </a>
+        <a href="https://prompthero.com" target="_blank" rel="noopener" class="btn-aff btn-aff-dark">
+          📚 Get 10,000 More Prompts<br><span style="font-weight:400;font-size:12px;color:var(--muted)">on PromptHero</span>
+        </a>
+      </div>
+      <p class="aff-disclaimer">These are affiliate links — we earn a small commission if you sign up, at no cost to you.</p>
+    </div>
+
+  </div>
+
+  <footer>
+    <span>AI Prompt Generator 2026</span> — Free Forever
+  </footer>
+
+</div>
+
+<script>
+  function generatePrompts() {
+    const age   = document.getElementById('age').value;
+    const skin  = document.getElementById('skin').value;
+    const hair  = document.getElementById('hair').value.trim() || 'natural hair';
+    const style = document.getElementById('style').value;
+    const bg    = document.getElementById('bg').value;
+    const mood  = document.getElementById('mood').value;
+
+    const suffix = "ultra-detailed, 8K, hyperrealistic photography, no plastic look, no airbrushing, natural imperfections — Leonardo AI PhotoReal";
+
+    const prompts = [
+      {
+        tag: "Close-Up Portrait",
+        text: `Close-up portrait of a ${age} year old ${style}. ${skin}, ${hair}. ${mood}. Shot on Sony A7III with 85mm f/1.4 lens, razor-thin depth of field. ${bg}. Visible natural skin texture, real pores, subtle blemishes, fine hair strands. Soft catch-light in eyes. ${suffix}.`
+      },
+      {
+        tag: "Three-Quarter Shot",
+        text: `Three-quarter body shot of a ${age} year old ${style}. ${skin}, ${hair}. ${mood}. Sony A7III, 50mm f/2.0, mid-range depth of field capturing face and torso. ${bg}. Authentic skin details, natural micro-expressions, unretouched complexion. Dynamic but relaxed posture. ${suffix}.`
+      },
+      {
+        tag: "Full Environmental Shot",
+        text: `Full-body environmental portrait of a ${age} year old ${style} immersed in scene. ${skin}, ${hair}. ${mood}. Shot on Sony A7III with 35mm f/1.8 wide-angle, subject integrated into environment, ${bg}. Authentic skin texture visible, human imperfections intact. Subject feels like a real person in a real place, not staged. ${suffix}.`
+      }
+    ];
+
+    const container = document.getElementById('promptCards');
+    container.innerHTML = '';
+
+    prompts.forEach((p, i) => {
+      const card = document.createElement('div');
+      card.className = 'prompt-card';
+      card.innerHTML = `
+        <div class="prompt-tag">${p.tag}</div>
+        <p class="prompt-text">${p.text}</p>
+        <button class="btn-copy" onclick="copyPrompt(this, \`${p.text.replace(/`/g, '\\`')}\`)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy Prompt
+        </button>
+      `;
+      container.appendChild(card);
+    });
+
+    const output = document.getElementById('output');
+    const aff    = document.getElementById('affiliates');
+    output.style.display = 'block';
+    aff.style.display    = 'block';
+
+    output.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function copyPrompt(btn, text) {
+    navigator.clipboard.writeText(text).then(() => {
+      btn.classList.add('copied');
+      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Prompt`;
+      }, 2000);
+    });
+  }
+</script>
+</body>
+</html>
