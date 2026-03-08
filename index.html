@@ -6,1174 +6,936 @@
 <title>AI Influencer Prompt Generator</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0f0f0f;
-    --surface: #161616;
-    --surface2: #1e1e1e;
-    --surface3: #242424;
-    --border: #2a2a2a;
-    --accent: #7c3aed;
-    --accent-glow: rgba(124,58,237,0.3);
-    --accent-light: #9d5ff5;
-    --text: #f0f0f0;
-    --muted: #888;
-    --red: #ef4444;
-    --red-bg: rgba(239,68,68,0.08);
-    --red-border: rgba(239,68,68,0.25);
-    --green: #22c55e;
-    --green-bg: rgba(34,197,94,0.08);
-    --green-border: rgba(34,197,94,0.2);
-    --radius: 12px;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.4;
-  }
-  .page { position: relative; z-index: 1; }
+:root {
+  --bg:#0f0f0f; --surface:#161616; --surface2:#1e1e1e; --surface3:#242424;
+  --border:#2a2a2a; --accent:#7c3aed; --accent-glow:rgba(124,58,237,0.3);
+  --accent-light:#9d5ff5; --text:#f0f0f0; --muted:#888;
+  --red:#ef4444; --red-bg:rgba(239,68,68,0.08); --red-border:rgba(239,68,68,0.25);
+  --green:#22c55e; --green-bg:rgba(34,197,94,0.08); --green-border:rgba(34,197,94,0.2);
+  --yellow:#eab308; --blue:#3b82f6; --radius:12px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.6;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.4}
+.page{position:relative;z-index:1}
 
-  /* HEADER */
-  header {
-    text-align: center;
-    padding: 80px 24px 60px;
-    position: relative;
-  }
-  header::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 50%; transform: translateX(-50%);
-    width: 700px; height: 420px;
-    background: radial-gradient(ellipse at 50% 20%, rgba(124,58,237,0.2) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .badge {
-    display: inline-block;
-    background: rgba(124,58,237,0.15);
-    border: 1px solid rgba(124,58,237,0.4);
-    color: var(--accent-light);
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 6px 16px;
-    border-radius: 100px;
-    margin-bottom: 28px;
-  }
-  h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(2.2rem, 6vw, 4rem);
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    margin-bottom: 20px;
-    max-width: 780px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  h1 span {
-    background: linear-gradient(135deg, #9d5ff5, #c084fc);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .subtitle {
-    font-size: clamp(1rem, 2.5vw, 1.2rem);
-    color: var(--muted);
-    max-width: 500px;
-    margin: 0 auto;
-  }
+/* HEADER */
+header{text-align:center;padding:72px 24px 56px;position:relative}
+header::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:700px;height:420px;background:radial-gradient(ellipse at 50% 20%,rgba(124,58,237,0.2) 0%,transparent 70%);pointer-events:none}
+.badge{display:inline-block;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.4);color:var(--accent-light);font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;padding:6px 16px;border-radius:100px;margin-bottom:24px}
+h1{font-family:'Syne',sans-serif;font-size:clamp(2rem,5.5vw,3.8rem);font-weight:800;line-height:1.1;letter-spacing:-0.02em;margin-bottom:18px;max-width:780px;margin-left:auto;margin-right:auto}
+h1 span{background:linear-gradient(135deg,#9d5ff5,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{font-size:clamp(1rem,2.5vw,1.15rem);color:var(--muted);max-width:500px;margin:0 auto}
 
-  .container {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 0 24px 80px;
-  }
+/* CONTAINER */
+.container{max-width:900px;margin:0 auto;padding:0 24px 80px}
 
-  /* PLATFORM TOGGLE */
-  .platform-toggle {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-bottom: 28px;
-    flex-wrap: wrap;
-  }
-  .btn-platform {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 100px;
-    color: var(--muted);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 10px 22px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-platform:hover { border-color: var(--accent); color: var(--text); }
-  .btn-platform.active {
-    background: linear-gradient(135deg, #7c3aed, #9333ea);
-    border-color: transparent;
-    color: #fff;
-    box-shadow: 0 4px 18px rgba(124,58,237,0.35);
-  }
-  .platform-ratio {
-    font-size: 11px;
-    opacity: 0.75;
-    background: rgba(255,255,255,0.12);
-    padding: 2px 7px;
-    border-radius: 100px;
-  }
-  .btn-platform.active .platform-ratio { background: rgba(255,255,255,0.2); }
+/* PLATFORM TOGGLE */
+.platform-toggle{display:flex;gap:10px;justify-content:center;margin-bottom:24px;flex-wrap:wrap}
+.btn-platform{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;padding:10px 22px;cursor:pointer;transition:all 0.2s}
+.btn-platform:hover{border-color:var(--accent);color:var(--text)}
+.btn-platform.active{background:linear-gradient(135deg,#7c3aed,#9333ea);border-color:transparent;color:#fff;box-shadow:0 4px 18px rgba(124,58,237,0.35)}
+.platform-ratio{font-size:11px;opacity:0.75;background:rgba(255,255,255,0.12);padding:2px 7px;border-radius:100px}
+.btn-platform.active .platform-ratio{background:rgba(255,255,255,0.2)}
 
-  /* FORM */
-  .form-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 40px;
-    margin-bottom: 32px;
-    position: relative;
-    overflow: hidden;
-  }
-  .form-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(124,58,237,0.6), transparent);
-  }
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 28px;
-  }
-  @media (max-width: 600px) {
-    .form-grid { grid-template-columns: 1fr; }
-    .form-card { padding: 24px; }
-  }
-  .field { display: flex; flex-direction: column; gap: 8px; }
-  label {
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  select, input[type="text"] {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    padding: 12px 16px;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    width: 100%;
-    appearance: none;
-    -webkit-appearance: none;
-  }
-  select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 40px;
-    cursor: pointer;
-  }
-  select:focus, input[type="text"]:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-glow);
-  }
-  select option { background: #1e1e1e; }
+/* CODE LOADER */
+.code-loader-bar{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px 22px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.code-loader-label{font-size:13px;color:var(--muted);white-space:nowrap;flex-shrink:0}
+.code-loader-input{flex:1;min-width:160px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:0.06em;padding:9px 14px;outline:none;transition:border-color 0.2s,box-shadow 0.2s}
+.code-loader-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.btn-load{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.4);border-radius:8px;color:var(--accent-light);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;padding:9px 18px;cursor:pointer;white-space:nowrap;transition:all 0.2s}
+.btn-load:hover{background:rgba(124,58,237,0.25);border-color:var(--accent)}
+.btn-load.success{background:rgba(34,197,94,0.15);border-color:rgba(34,197,94,0.4);color:var(--green)}
+.btn-load.error{background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.35);color:#f87171}
 
-  .btn-generate {
-    width: 100%;
-    background: linear-gradient(135deg, #7c3aed, #9333ea);
-    border: none;
-    border-radius: var(--radius);
-    color: #fff;
-    font-family: 'Syne', sans-serif;
-    font-size: 17px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    padding: 16px 32px;
-    cursor: pointer;
-    transition: transform 0.15s, box-shadow 0.2s, filter 0.2s;
-  }
-  .btn-generate:hover { filter: brightness(1.1); box-shadow: 0 8px 32px rgba(124,58,237,0.45); transform: translateY(-1px); }
-  .btn-generate:active { transform: translateY(0); }
+/* LAYER WRAPPER */
+.layer-wrapper{margin-bottom:12px}
+.layer-label{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#444;padding:0 4px;margin-bottom:6px}
 
-  /* OUTPUT */
-  #output { display: none; margin-bottom: 28px; }
-  .output-header {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 20px;
-  }
-  .prompt-cards { display: flex; flex-direction: column; gap: 24px; }
+/* COLLAPSIBLE SECTION */
+.form-section{background:var(--surface);border:1px solid var(--border);border-radius:18px;margin-bottom:10px;overflow:hidden;transition:border-color 0.2s;position:relative}
+.form-section.open{border-color:rgba(124,58,237,0.3)}
+.form-section.open::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(124,58,237,0.5),transparent)}
+.section-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;background:none;border:none;cursor:pointer;color:var(--text);text-align:left;gap:12px}
+.section-toggle:hover{background:rgba(255,255,255,0.02)}
+.section-toggle-left{display:flex;align-items:center;gap:12px}
+.section-toggle-icon{font-size:15px;width:30px;height:30px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.18);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.section-toggle-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700}
+.section-toggle-meta{font-size:11px;color:var(--muted);margin-top:1px}
+.section-arrow{width:26px;height:26px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform 0.25s,background 0.2s}
+.form-section.open .section-arrow{transform:rotate(180deg);background:rgba(124,58,237,0.15);border-color:rgba(124,58,237,0.3)}
+.section-body{display:none;padding:4px 24px 22px;border-top:1px solid var(--border)}
+.form-section.open .section-body{display:block}
 
-  /* PROMPT CARD */
-  .prompt-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    animation: fadeUp 0.4s ease both;
-  }
-  .prompt-card:nth-child(2) { animation-delay: 0.1s; }
-  .prompt-card:nth-child(3) { animation-delay: 0.2s; }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+/* FORM GRID */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:18px}
+@media(max-width:640px){.form-grid,.form-grid-3{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:7px}
+.field-full{grid-column:1/-1}
+.field-group-label{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:rgba(124,58,237,0.7);margin-top:16px;margin-bottom:2px;padding-bottom:6px;border-bottom:1px solid rgba(124,58,237,0.12)}
+label{font-size:11px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted)}
+.label-row{display:flex;align-items:center;gap:8px}
+.optional-tag{font-size:9px;font-weight:500;letter-spacing:0.06em;color:#555;background:var(--surface2);border:1px solid #333;padding:2px 7px;border-radius:100px;text-transform:uppercase}
+select,input[type="text"]{background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:10px 14px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;width:100%;appearance:none;-webkit-appearance:none}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;cursor:pointer}
+select:focus,input[type="text"]:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+select option{background:#1e1e1e}
 
-  .card-top-bar {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface2);
-  }
-  .prompt-number {
-    font-family: 'Syne', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .prompt-tag {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--accent-light);
-    background: rgba(124,58,237,0.12);
-    border: 1px solid rgba(124,58,237,0.25);
-    padding: 3px 10px;
-    border-radius: 100px;
-  }
+/* CHECKBOX CHIPS */
+.checkbox-group{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px}
+.cb-label{display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12px;color:#bbb;cursor:pointer;transition:all 0.15s;user-select:none}
+.cb-label input[type="checkbox"]{display:none}
+.cb-label:hover{border-color:rgba(124,58,237,0.4);color:var(--text)}
+.cb-label.checked{background:rgba(124,58,237,0.15);border-color:rgba(124,58,237,0.5);color:var(--accent-light)}
+.cb-check{width:13px;height:13px;border:1px solid #444;border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;font-size:9px}
+.cb-label.checked .cb-check{background:var(--accent);border-color:var(--accent);color:#fff}
 
-  .card-body { padding: 20px 24px; }
+/* GENERATE BUTTON */
+.generate-wrap{margin-top:16px}
+.btn-generate{width:100%;background:linear-gradient(135deg,#7c3aed,#9333ea);border:none;border-radius:var(--radius);color:#fff;font-family:'Syne',sans-serif;font-size:17px;font-weight:700;letter-spacing:0.02em;padding:16px 32px;cursor:pointer;transition:transform 0.15s,box-shadow 0.2s,filter 0.2s}
+.btn-generate:hover{filter:brightness(1.1);box-shadow:0 8px 32px rgba(124,58,237,0.45);transform:translateY(-1px)}
+.btn-generate:active{transform:translateY(0)}
 
-  /* PROMPT TEXT — token style */
-  .prompt-text {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    line-height: 1.9;
-    color: #d4d4d4;
-    margin-bottom: 20px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px 18px;
-    word-break: break-word;
-  }
-  .prompt-text .token-subject  { color: #c084fc; }
-  .prompt-text .token-camera   { color: #60a5fa; }
-  .prompt-text .token-lighting { color: #fbbf24; }
-  .prompt-text .token-realism  { color: #34d399; }
-  .prompt-text .token-hidden   { color: #f87171; }
+/* OUTPUT */
+#output{display:none;margin-bottom:24px}
+.output-header{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:18px}
+.prompt-cards{display:flex;flex-direction:column;gap:22px}
 
-  /* NEGATIVE PROMPT */
-  .negative-prompt-block {
-    background: var(--red-bg);
-    border: 1px solid var(--red-border);
-    border-radius: 10px;
-    padding: 14px 18px;
-    margin-bottom: 16px;
-  }
-  .negative-label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--red);
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .negative-text {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: #f87171;
-    line-height: 1.7;
-  }
+/* PROMPT CARD */
+.prompt-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;animation:fadeUp 0.4s ease both}
+.prompt-card:nth-child(2){animation-delay:0.08s}
+.prompt-card:nth-child(3){animation-delay:0.16s}
+.prompt-card:nth-child(4){animation-delay:0.24s}
+.prompt-card:nth-child(5){animation-delay:0.32s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.card-top-bar{display:flex;align-items:center;gap:10px;padding:14px 22px;border-bottom:1px solid var(--border);background:var(--surface2)}
+.prompt-number{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)}
+.prompt-tag{font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent-light);background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);padding:3px 10px;border-radius:100px}
+.card-body{padding:18px 22px}
+.prompt-text{font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.85;color:#d4d4d4;margin-bottom:16px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;word-break:break-word}
 
-  /* LEONARDO SETTINGS PANEL */
-  .settings-panel {
-    background: #0d0d14;
-    border: 1px solid rgba(124,58,237,0.2);
-    border-radius: 10px;
-    padding: 14px 18px;
-    margin-bottom: 16px;
-  }
-  .settings-panel-header {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--accent-light);
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .settings-panel-header::before {
-    content: '';
-    display: inline-block;
-    width: 6px; height: 6px;
-    background: var(--accent);
-    border-radius: 50%;
-    box-shadow: 0 0 6px var(--accent);
-  }
-  .settings-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 8px;
-  }
-  .setting-item {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .setting-key {
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #555;
-  }
-  .setting-val {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    font-weight: 500;
-    color: #e2e2e2;
-  }
-  .setting-val.on { color: var(--green); }
-  .setting-val.ratio-val { color: #fbbf24; }
+/* NEGATIVE PROMPT */
+.negative-prompt-block{background:var(--red-bg);border:1px solid var(--red-border);border-radius:9px;padding:11px 15px;margin-bottom:14px}
+.negative-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--red);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.negative-text{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#f87171;line-height:1.65}
 
-  /* CARD ACTIONS */
-  .card-actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .btn-copy, .btn-upgrade {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 9px 18px;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: 1px solid var(--border);
-  }
-  .btn-copy { background: var(--surface2); color: var(--text); }
-  .btn-copy:hover { background: rgba(124,58,237,0.15); border-color: var(--accent); color: var(--accent-light); }
-  .btn-copy.copied { background: rgba(124,58,237,0.2); border-color: var(--accent); color: #c084fc; }
-  .btn-upgrade { background: rgba(124,58,237,0.1); border-color: rgba(124,58,237,0.3); color: var(--accent-light); }
-  .btn-upgrade:hover { background: rgba(124,58,237,0.2); border-color: var(--accent); }
-  .btn-upgrade.upgraded { background: rgba(34,197,94,0.1); border-color: rgba(34,197,94,0.3); color: var(--green); pointer-events: none; }
+/* SETTINGS PANEL */
+.settings-panel{background:#0d0d14;border:1px solid rgba(124,58,237,0.18);border-radius:9px;padding:12px 16px;margin-bottom:14px}
+.settings-panel-header{font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent-light);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.settings-panel-header::before{content:'';display:inline-block;width:5px;height:5px;background:var(--accent);border-radius:50%;box-shadow:0 0 5px var(--accent)}
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:7px}
+.setting-item{display:flex;flex-direction:column;gap:2px}
+.setting-key{font-size:8px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#555}
+.setting-val{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;color:#e2e2e2}
+.setting-val.on{color:var(--green)}
+.setting-val.ratio-val{color:#fbbf24}
 
-  /* SAFETY WARNING (card 3 only) */
-  .safety-warning {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    background: rgba(234,179,8,0.08);
-    border: 1px solid rgba(234,179,8,0.3);
-    border-radius: 10px;
-    padding: 12px 16px;
-    margin-bottom: 14px;
-  }
-  .safety-warning-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-  .safety-warning-text {
-    font-size: 13px;
-    color: #fde047;
-    line-height: 1.55;
-  }
-  .btn-simpler {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    background: rgba(234,179,8,0.1);
-    border: 1px solid rgba(234,179,8,0.35);
-    border-radius: 8px;
-    color: #fde047;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 9px 18px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-simpler:hover { background: rgba(234,179,8,0.18); border-color: rgba(234,179,8,0.6); }
-  .btn-simpler.used { background: rgba(34,197,94,0.1); border-color: rgba(34,197,94,0.3); color: var(--green); pointer-events: none; }
+/* TOOLTIP */
+.tooltip-wrap{position:relative;display:inline-flex;align-items:center;gap:5px}
+.tooltip-icon{width:15px;height:15px;background:rgba(59,130,246,0.2);border:1px solid rgba(59,130,246,0.4);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#60a5fa;cursor:default;flex-shrink:0;line-height:1}
+.tooltip-box{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#1a2540;border:1px solid rgba(59,130,246,0.35);border-radius:8px;padding:8px 11px;font-size:11px;color:#93c5fd;line-height:1.5;width:210px;z-index:10;box-shadow:0 8px 24px rgba(0,0,0,0.5);pointer-events:none}
+.tooltip-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:rgba(59,130,246,0.35)}
+.tooltip-wrap:hover .tooltip-box{display:block}
 
-  /* CHARACTER LOCK */
-  #lockSection {
-    display: none;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 24px;
-    margin-bottom: 32px;
-    position: relative;
-    overflow: hidden;
-    animation: fadeUp 0.5s ease both;
-  }
-  #lockSection::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(124,58,237,0.5), transparent);
-  }
-  .lock-header {
-    font-family: 'Syne', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    margin-bottom: 4px;
-  }
-  .lock-sub { font-size: 13px; color: #555; margin-bottom: 16px; }
-  .lock-code-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-  .lock-code {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 20px;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    color: var(--accent-light);
-    background: rgba(124,58,237,0.1);
-    border: 1px solid rgba(124,58,237,0.3);
-    border-radius: 10px;
-    padding: 10px 20px;
-  }
-  .btn-copy-code {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 10px 18px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-copy-code:hover { border-color: var(--accent); color: var(--accent-light); }
-  .btn-copy-code.copied { background: rgba(124,58,237,0.2); border-color: var(--accent); color: #c084fc; }
+/* CARD ACTIONS */
+.card-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn-copy,.btn-upgrade{display:inline-flex;align-items:center;gap:6px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:8px 15px;cursor:pointer;transition:all 0.2s;border:1px solid var(--border)}
+.btn-copy{background:var(--surface2);color:var(--text)}
+.btn-copy:hover{background:rgba(124,58,237,0.15);border-color:var(--accent);color:var(--accent-light)}
+.btn-copy.copied{background:rgba(124,58,237,0.2);border-color:var(--accent);color:#c084fc}
+.btn-upgrade{background:rgba(124,58,237,0.1);border-color:rgba(124,58,237,0.3);color:var(--accent-light)}
+.btn-upgrade:hover{background:rgba(124,58,237,0.2);border-color:var(--accent)}
+.btn-upgrade.upgraded{background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.3);color:var(--green);pointer-events:none}
 
-  /* AFFILIATES */
-  #affiliates { display: none; margin-bottom: 48px; }
-  .section-header {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 16px;
-  }
-  .aff-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-  @media (max-width: 600px) { .aff-grid { grid-template-columns: 1fr; } }
-  .btn-aff {
-    display: block;
-    text-align: center;
-    text-decoration: none;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    padding: 14px 16px;
-    border-radius: var(--radius);
-    border: 1px solid transparent;
-    transition: transform 0.15s, box-shadow 0.2s, filter 0.2s;
-    line-height: 1.3;
-  }
-  .btn-aff:hover { transform: translateY(-2px); filter: brightness(1.08); }
-  .btn-aff-purple { background: linear-gradient(135deg, #7c3aed, #9333ea); color: #fff; box-shadow: 0 4px 20px rgba(124,58,237,0.3); }
-  .btn-aff-dark { background: var(--surface2); color: var(--text); border-color: var(--border); }
-  .btn-aff-dark:hover { border-color: rgba(124,58,237,0.4); box-shadow: 0 4px 20px rgba(124,58,237,0.15); }
-  .aff-disclaimer { font-size: 12px; color: #555; text-align: center; }
+/* SAFETY WARNING */
+.safety-warning{display:flex;align-items:flex-start;gap:9px;background:rgba(234,179,8,0.08);border:1px solid rgba(234,179,8,0.3);border-radius:9px;padding:11px 15px;margin-bottom:13px}
+.safety-warning-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+.safety-warning-text{font-size:12px;color:#fde047;line-height:1.55}
+.btn-simpler{display:inline-flex;align-items:center;gap:6px;background:rgba(234,179,8,0.1);border:1px solid rgba(234,179,8,0.35);border-radius:8px;color:#fde047;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:8px 15px;cursor:pointer;transition:all 0.2s}
+.btn-simpler:hover{background:rgba(234,179,8,0.18);border-color:rgba(234,179,8,0.6)}
+.btn-simpler.used{background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.3);color:var(--green);pointer-events:none}
 
-  /* GALLERY */
-  #gallery { display: none; margin-bottom: 56px; }
-  .gallery-sub { font-size: 14px; color: #555; margin-bottom: 20px; margin-top: -8px; }
-  .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-  @media (max-width: 600px) { .gallery-grid { grid-template-columns: 1fr 1fr; } }
-  .gallery-item { border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--surface); }
-  .gallery-placeholder {
-    aspect-ratio: 4/5;
-    background: linear-gradient(135deg, #1a1a2e, #16213e, #1e1e2e);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    border-bottom: 1px solid var(--border);
-    position: relative;
-    overflow: hidden;
-  }
-  .gallery-placeholder::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 50% 80%, rgba(124,58,237,0.15), transparent 60%);
-  }
-  .gallery-icon { font-size: 28px; opacity: 0.35; position: relative; }
-  .gallery-pill {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #444;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid #2a2a2a;
-    padding: 3px 10px;
-    border-radius: 100px;
-    position: relative;
-  }
-  .gallery-caption { padding: 10px 12px; font-size: 11px; color: #555; line-height: 1.5; font-style: italic; }
+/* CHARACTER LOCK */
+#lockSection{display:none;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:16px;position:relative;overflow:hidden;animation:fadeUp 0.5s ease both}
+#lockSection::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(124,58,237,0.5),transparent)}
+.lock-header{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:12px}
+.lock-code-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.lock-code{font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:500;letter-spacing:0.15em;color:var(--accent-light);background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);border-radius:9px;padding:9px 18px}
+.btn-copy-code{display:inline-flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:9px 16px;cursor:pointer;transition:all 0.2s}
+.btn-copy-code:hover{border-color:var(--accent);color:var(--accent-light)}
+.btn-copy-code.copied{background:rgba(124,58,237,0.2);border-color:var(--accent);color:#c084fc}
+.lock-persist-note{font-size:11px;color:#555;line-height:1.55}
+.lock-persist-note strong{color:#666}
 
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 24px;
-    text-align: center;
-    color: #444;
-    font-size: 13px;
-  }
-  footer span { color: #666; }
+/* SAVED CHARACTERS */
+#savedCharsSection{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:28px;position:relative;overflow:hidden}
+#savedCharsSection::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(124,58,237,0.4),transparent)}
+.saved-chars-header{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:4px}
+.saved-chars-sub{font-size:12px;color:#555;margin-bottom:14px}
+.saved-chars-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:9px}
+.saved-char-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:11px 13px;cursor:pointer;transition:all 0.2s;text-align:left}
+.saved-char-card:hover{border-color:rgba(124,58,237,0.45);background:rgba(124,58,237,0.08)}
+.saved-char-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px}
+.saved-char-code{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent-light);margin-bottom:3px;word-break:break-all}
+.saved-char-date{font-size:9px;color:#555}
 
-  /* ── COLLAPSIBLE FORM SECTIONS ── */
-  .form-section {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    margin-bottom: 12px;
-    overflow: hidden;
-    transition: border-color 0.2s;
-  }
-  .form-section.open { border-color: rgba(124,58,237,0.35); }
-  .form-section::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(124,58,237,0.5), transparent);
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-  .form-section.open::before { opacity: 1; }
+/* AFFILIATES */
+#affiliates{display:none;margin-bottom:44px}
+.section-header{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:14px}
+.aff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}
+@media(max-width:580px){.aff-grid{grid-template-columns:1fr}}
+.btn-aff{display:block;text-align:center;text-decoration:none;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;padding:13px 14px;border-radius:var(--radius);border:1px solid transparent;transition:transform 0.15s,box-shadow 0.2s,filter 0.2s;line-height:1.3}
+.btn-aff:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.btn-aff-purple{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;box-shadow:0 4px 20px rgba(124,58,237,0.3)}
+.btn-aff-dark{background:var(--surface2);color:var(--text);border-color:var(--border)}
+.btn-aff-dark:hover{border-color:rgba(124,58,237,0.4);box-shadow:0 4px 20px rgba(124,58,237,0.15)}
+.aff-disclaimer{font-size:11px;color:#555;text-align:center}
 
-  .section-toggle {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 28px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--text);
-    text-align: left;
-    gap: 12px;
-  }
-  .section-toggle:hover { background: rgba(255,255,255,0.02); }
+/* GALLERY */
+#gallery{display:none;margin-bottom:52px}
+.gallery-sub{font-size:13px;color:#555;margin-bottom:18px;margin-top:-6px}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:580px){.gallery-grid{grid-template-columns:1fr 1fr}}
+.gallery-item{border-radius:11px;overflow:hidden;border:1px solid var(--border);background:var(--surface)}
+.gallery-placeholder{aspect-ratio:4/5;background:linear-gradient(135deg,#1a1a2e,#16213e,#1e1e2e);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.gallery-placeholder::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 80%,rgba(124,58,237,0.15),transparent 60%)}
+.gallery-icon{font-size:26px;opacity:0.3;position:relative}
+.gallery-pill{font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#444;background:rgba(255,255,255,0.04);border:1px solid #2a2a2a;padding:3px 9px;border-radius:100px;position:relative}
+.gallery-caption{padding:9px 11px;font-size:10px;color:#555;line-height:1.5;font-style:italic}
 
-  .section-toggle-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .section-toggle-icon {
-    font-size: 16px;
-    width: 32px; height: 32px;
-    background: rgba(124,58,237,0.12);
-    border: 1px solid rgba(124,58,237,0.2);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .section-toggle-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-  }
-  .section-toggle-meta {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 1px;
-  }
-  .section-arrow {
-    width: 28px; height: 28px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    transition: transform 0.25s, background 0.2s;
-  }
-  .form-section.open .section-arrow { transform: rotate(180deg); background: rgba(124,58,237,0.15); border-color: rgba(124,58,237,0.3); }
-  .section-arrow svg { transition: stroke 0.2s; }
-  .form-section.open .section-arrow svg { stroke: var(--accent-light); }
-
-  .section-body {
-    display: none;
-    padding: 0 28px 24px;
-    border-top: 1px solid var(--border);
-  }
-  .form-section.open .section-body { display: block; }
-  .section-body .form-grid { margin-top: 20px; margin-bottom: 0; }
-
-  /* Full-width field inside grid */
-  .field-full { grid-column: 1 / -1; }
-
-  /* CHECKBOX GROUP */
-  .checkbox-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 4px;
-  }
-  .cb-label {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 7px 13px;
-    font-size: 13px;
-    color: #bbb;
-    cursor: pointer;
-    transition: all 0.15s;
-    user-select: none;
-  }
-  .cb-label input[type="checkbox"] { display: none; }
-  .cb-label:hover { border-color: rgba(124,58,237,0.4); color: var(--text); }
-  .cb-label.checked {
-    background: rgba(124,58,237,0.15);
-    border-color: rgba(124,58,237,0.5);
-    color: var(--accent-light);
-  }
-  .cb-check {
-    width: 14px; height: 14px;
-    border: 1px solid #444;
-    border-radius: 4px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.15s;
-    font-size: 10px;
-  }
-  .cb-label.checked .cb-check {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-  }
-
-  /* OPTIONAL LABEL */
-  .label-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .optional-tag {
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    color: #555;
-    background: var(--surface2);
-    border: 1px solid #333;
-    padding: 2px 8px;
-    border-radius: 100px;
-    text-transform: uppercase;
-  }
-
-  /* Generate button now lives outside sections */
-  .generate-wrap {
-    margin-top: 16px;
-  }
+footer{border-top:1px solid var(--border);padding:22px;text-align:center;color:#444;font-size:12px}
+footer span{color:#666}
 </style>
 </head>
 <body>
 <div class="page">
-
-  <header>
-    <div class="badge">✦ Free AI Tool — No Sign-Up Needed</div>
-    <h1>Stop Making <span>Fake-Looking</span><br>AI Influencers</h1>
-    <p class="subtitle">Generate Ultra-Realistic Prompts in 30 Seconds — Free</p>
-  </header>
-
-  <div class="container">
-
-    <!-- PLATFORM TOGGLE -->
-    <div class="platform-toggle">
-      <button class="btn-platform active" data-platform="Instagram" data-ratio="4:5" onclick="selectPlatform(this)">
-        📸 Instagram <span class="platform-ratio">4:5</span>
-      </button>
-      <button class="btn-platform" data-platform="TikTok" data-ratio="9:16" onclick="selectPlatform(this)">
-        🎵 TikTok <span class="platform-ratio">9:16</span>
-      </button>
-      <button class="btn-platform" data-platform="YouTube" data-ratio="16:9" onclick="selectPlatform(this)">
-        ▶️ YouTube <span class="platform-ratio">16:9</span>
-      </button>
-    </div>
-
-    <!-- SECTION 1: BASIC DETAILS (always open) -->
-    <div class="form-section open" id="sec-basic">
-      <button class="section-toggle" onclick="toggleSection('sec-basic')">
-        <div class="section-toggle-left">
-          <div class="section-toggle-icon">✦</div>
-          <div>
-            <div class="section-toggle-title">Basic Details</div>
-            <div class="section-toggle-meta">Required — age, skin, hair, setting</div>
-          </div>
-        </div>
-        <div class="section-arrow"><svg width="12" height="8" viewBox="0 0 12 8" fill="none" stroke="#888" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l5 5 5-5"/></svg></div>
-      </button>
-      <div class="section-body">
-        <div class="form-grid">
-          <div class="field">
-            <label>Age Range</label>
-            <select id="age">
-              <option value="18-24">18–24</option>
-              <option value="25-34">25–34</option>
-              <option value="35-44">35–44</option>
-              <option value="45+">45+</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Skin Tone</label>
-            <select id="skin">
-              <option value="fair porcelain complexion, pale undertones">Fair / Light</option>
-              <option value="light medium skin, warm peachy undertones">Light Medium</option>
-              <option value="medium olive skin, golden warm undertones">Medium</option>
-              <option value="medium brown skin, rich warm undertones">Medium Brown</option>
-              <option value="deep brown skin, luminous undertones">Deep Brown</option>
-              <option value="deep ebony complexion, cool undertones">Deep</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Hair Description</label>
-            <input type="text" id="hair" placeholder="e.g. long black wavy hair" />
-          </div>
-          <div class="field">
-            <label>Creator Style</label>
-            <select id="style">
-              <option value="lifestyle blogger, casual aspirational aesthetic">Lifestyle Blogger</option>
-              <option value="fitness creator, athletic energetic look">Fitness Creator</option>
-              <option value="fashion influencer, high-end editorial style">Fashion Influencer</option>
-              <option value="travel creator, adventurous wanderlust aesthetic">Travel Creator</option>
-              <option value="business creator, polished professional look">Business Creator</option>
-              <option value="beauty creator, glam editorial aesthetic">Beauty Creator</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Background Setting</label>
-            <select id="bg">
-              <option value="studio_white">Studio White Background</option>
-              <option value="golden_hour">Outdoor Golden Hour</option>
-              <option value="urban">Urban Street</option>
-              <option value="luxury">Luxury Interior</option>
-              <option value="beach">Tropical Beach</option>
-              <option value="cafe">Cosy Cafe</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Camera Mood</label>
-            <select id="mood">
-              <option value="candid natural moment, spontaneous energy">Candid and Natural</option>
-              <option value="editorial polished composition, magazine quality">Editorial and Polished</option>
-              <option value="raw authentic unposed, documentary style">Raw and Authentic</option>
-              <option value="cinematic dramatic lighting, moody atmosphere">Cinematic and Dramatic</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SECTION 2: FACE DETAILS -->
-    <div class="form-section" id="sec-face">
-      <button class="section-toggle" onclick="toggleSection('sec-face')">
-        <div class="section-toggle-left">
-          <div class="section-toggle-icon">👁</div>
-          <div>
-            <div class="section-toggle-title">Face Details</div>
-            <div class="section-toggle-meta">Eye colour, facial structure, features</div>
-          </div>
-        </div>
-        <div class="section-arrow"><svg width="12" height="8" viewBox="0 0 12 8" fill="none" stroke="#888" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l5 5 5-5"/></svg></div>
-      </button>
-      <div class="section-body">
-        <div class="form-grid">
-          <div class="field">
-            <label>Eye Colour — Left</label>
-            <select id="eye-left">
-              <option value="brown eyes">Brown</option>
-              <option value="blue eyes">Blue</option>
-              <option value="green eyes">Green</option>
-              <option value="hazel eyes">Hazel</option>
-              <option value="grey eyes">Grey</option>
-              <option value="amber eyes">Amber</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Eye Colour — Right</label>
-            <select id="eye-right">
-              <option value="same">Same as left</option>
-              <option value="brown">Brown</option>
-              <option value="blue">Blue</option>
-              <option value="green">Green</option>
-              <option value="hazel">Hazel</option>
-              <option value="grey">Grey</option>
-              <option value="amber">Amber</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Facial Structure</label>
-            <select id="face-shape">
-              <option value="">No preference</option>
-              <option value="oval face shape">Oval</option>
-              <option value="round face shape">Round</option>
-              <option value="square face shape">Square</option>
-              <option value="heart-shaped face">Heart</option>
-              <option value="diamond face shape">Diamond</option>
-            </select>
-          </div>
-          <div class="field field-full">
-            <label>Distinctive Features</label>
-            <div class="checkbox-group" id="features-group">
-              <label class="cb-label" onclick="toggleCb(this, event)"><input type="checkbox" value="subtle natural freckles across nose"><span class="cb-check"></span>Freckles</label>
-              <label class="cb-label" onclick="toggleCb(this, event)"><input type="checkbox" value="small beauty mark near lips"><span class="cb-check"></span>Beauty mark</label>
-              <label class="cb-label" onclick="toggleCb(this, event)"><input type="checkbox" value="faint subtle scar, character detail"><span class="cb-check"></span>Subtle scar</label>
-              <label class="cb-label" onclick="toggleCb(this, event)"><input type="checkbox" value="natural dimples when smiling"><span class="cb-check"></span>Dimples</label>
-              <label class="cb-label" onclick="toggleCb(this, event)"><input type="checkbox" value="strong defined jawline"><span class="cb-check"></span>Strong jawline</label>
-              <label class="cb-label" onclick="toggleCb(this, event)"><input type="checkbox" value="prominent high cheekbones"><span class="cb-check"></span>High cheekbones</label>
-              <label class="cb-label checked" id="feat-none" onclick="toggleNone('feat-none','features-group', event)"><input type="checkbox" value="" checked><span class="cb-check">✓</span>None</label>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SECTION 3: STYLE & OUTFIT -->
-    <div class="form-section" id="sec-style">
-      <button class="section-toggle" onclick="toggleSection('sec-style')">
-        <div class="section-toggle-left">
-          <div class="section-toggle-icon">👗</div>
-          <div>
-            <div class="section-toggle-title">Style &amp; Outfit</div>
-            <div class="section-toggle-meta">Clothing, makeup, accessories</div>
-          </div>
-        </div>
-        <div class="section-arrow"><svg width="12" height="8" viewBox="0 0 12 8" fill="none" stroke="#888" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l5 5 5-5"/></svg></div>
-      </button>
-      <div class="section-body">
-        <div class="form-grid">
-          <div class="field">
-            <label>Outfit Style</label>
-            <select id="outfit">
-              <option value="">No preference</option>
-              <option value="streetwear casual outfit, relaxed street style">Streetwear Casual</option>
-              <option value="business professional attire, tailored look">Business Professional</option>
-              <option value="high fashion editorial clothing, avant-garde styling">High Fashion Editorial</option>
-              <option value="athleisure fitness wear, performance athletic outfit">Athleisure / Fitness</option>
-              <option value="bohemian aesthetic outfit, flowing natural fabrics">Bohemian / Aesthetic</option>
-              <option value="minimalist neutral tones outfit, clean simple styling">Minimalist Neutral</option>
-              <option value="luxury brand fashion, designer clothing, premium materials">Luxury Brand</option>
-              <option value="vintage retro inspired outfit, nostalgic fashion styling">Vintage / Retro</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Makeup Level</label>
-            <select id="makeup">
-              <option value="">No preference</option>
-              <option value="no makeup natural look, bare skin, zero cosmetics">No Makeup / Natural</option>
-              <option value="minimal clean girl makeup, light tinted moisturiser, mascara">Minimal Clean Girl</option>
-              <option value="full glam makeup, dramatic eyes, defined contour, bold lip">Glam Full Beat</option>
-              <option value="bold artistic makeup, editorial colour, creative eye looks">Bold Artistic</option>
-            </select>
-          </div>
-          <div class="field field-full">
-            <label>Accessories</label>
-            <div class="checkbox-group" id="acc-group">
-              <label class="cb-label" onclick="toggleCb(this, event)"><input type="checkbox" value="gold jewellery accessories"><span class="cb-check"></span>Gold jewellery</label>
-              <label class="cb-label" onclick="toggleCb(this, event)"><input type="checkbox" value="silver jewellery accessories"><span class="cb-check"></span>Silver jewellery</label>
-              <label class="cb-label" onclick="toggleCb(this, event)"><input type="checkbox" value="stylish sunglasses"><span class="cb-check"></span>Sunglasses</label>
-              <label class="cb-label" onclick="toggleCb(this, event)"><input type="checkbox" value="hat or cap accessory"><span class="cb-check"></span>Hat / Cap</label>
-              <label class="cb-label" onclick="toggleCb(this, event)"><input type="checkbox" value="stylish bag or purse"><span class="cb-check"></span>Bag</label>
-              <label class="cb-label" onclick="toggleCb(this, event)"><input type="checkbox" value="luxury watch on wrist"><span class="cb-check"></span>Watch</label>
-              <label class="cb-label checked" id="acc-none" onclick="toggleNone('acc-none','acc-group', event)"><input type="checkbox" value="" checked><span class="cb-check">✓</span>None</label>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SECTION 4: MOOD & EMOTION -->
-    <div class="form-section" id="sec-mood">
-      <button class="section-toggle" onclick="toggleSection('sec-mood')">
-        <div class="section-toggle-left">
-          <div class="section-toggle-icon">✨</div>
-          <div>
-            <div class="section-toggle-title">Mood &amp; Emotion</div>
-            <div class="section-toggle-meta">Expression, energy, custom detail</div>
-          </div>
-        </div>
-        <div class="section-arrow"><svg width="12" height="8" viewBox="0 0 12 8" fill="none" stroke="#888" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l5 5 5-5"/></svg></div>
-      </button>
-      <div class="section-body">
-        <div class="form-grid">
-          <div class="field">
-            <label>Expression</label>
-            <select id="expression">
-              <option value="">No preference</option>
-              <option value="neutral confident expression, composed look">Neutral Confident</option>
-              <option value="soft genuine smile, warm and approachable">Soft Genuine Smile</option>
-              <option value="laughing candid expression, natural joy">Laughing Candid</option>
-              <option value="serious editorial expression, intense gaze">Serious Editorial</option>
-              <option value="mysterious sultry look, smouldering gaze">Mysterious / Sultry</option>
-              <option value="surprised excited expression, bright energy">Surprised / Excited</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Energy</label>
-            <select id="energy">
-              <option value="">No preference</option>
-              <option value="calm peaceful energy, serene composed presence">Calm and Peaceful</option>
-              <option value="high energy dynamic presence, movement and life">High Energy Dynamic</option>
-              <option value="thoughtful introspective mood, quiet contemplation">Thoughtful Introspective</option>
-              <option value="bold powerful confident energy, commanding presence">Bold and Powerful</option>
-            </select>
-          </div>
-          <div class="field field-full">
-            <div class="label-row">
-              <label>Add Detail</label>
-              <span class="optional-tag">Optional</span>
-            </div>
-            <input type="text" id="extra-detail" placeholder="e.g. single tear, slight smirk, looking over shoulder" />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- GENERATE BUTTON -->
-    <div class="generate-wrap">
-      <button class="btn-generate" onclick="generatePrompts()">
-        ⚡ Generate My Prompts
-      </button>
-    </div>
-
-    <!-- OUTPUT -->
-    <div id="output">
-      <div class="output-header">✦ Your Generated Prompts</div>
-      <div class="prompt-cards" id="promptCards"></div>
-    </div>
-
-    <!-- CHARACTER LOCK CODE -->
-    <div id="lockSection">
-      <div class="lock-header">🔒 Character Lock Code</div>
-      <p class="lock-sub">Save this code to regenerate the same influencer in future sessions.</p>
-      <div class="lock-code-row">
-        <span class="lock-code" id="lockCode">—</span>
-        <button class="btn-copy-code" onclick="copyLockCode(this)">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-          Copy Code
-        </button>
-      </div>
-    </div>
-
-    <!-- AFFILIATES -->
-    <div id="affiliates">
-      <div class="section-header">✦ Put Your Prompt to Work</div>
-      <div class="aff-grid">
-        <a href="https://leonardo.ai" target="_blank" rel="noopener" class="btn-aff btn-aff-purple">
-          🎨 Generate This Image Free<br><span style="font-weight:400;font-size:12px;opacity:0.85">via Leonardo AI</span>
-        </a>
-        <a href="https://heygen.com" target="_blank" rel="noopener" class="btn-aff btn-aff-dark">
-          🎬 Animate Your Influencer<br><span style="font-weight:400;font-size:12px;color:var(--muted)">with HeyGen</span>
-        </a>
-        <a href="https://prompthero.com" target="_blank" rel="noopener" class="btn-aff btn-aff-dark">
-          📚 Get 10,000 More Prompts<br><span style="font-weight:400;font-size:12px;color:var(--muted)">on PromptHero</span>
-        </a>
-      </div>
-      <p class="aff-disclaimer">These are affiliate links — we earn a small commission if you sign up, at no cost to you.</p>
-    </div>
-
-    <!-- GALLERY -->
-    <div id="gallery">
-      <div class="section-header">✦ Real Results From This Tool</div>
-      <p class="gallery-sub">Examples generated using prompts from this tool on Leonardo AI PhotoReal.</p>
-      <div class="gallery-grid">
-        <div class="gallery-item">
-          <div class="gallery-placeholder"><div class="gallery-icon">🖼️</div><div class="gallery-pill">[Example Image]</div></div>
-          <div class="gallery-caption">"25-34, lifestyle blogger, golden hour, Sony A7III 85mm…"</div>
-        </div>
-        <div class="gallery-item">
-          <div class="gallery-placeholder"><div class="gallery-icon">🖼️</div><div class="gallery-pill">[Example Image]</div></div>
-          <div class="gallery-caption">"Fashion influencer, luxury interior, editorial mood…"</div>
-        </div>
-        <div class="gallery-item">
-          <div class="gallery-placeholder"><div class="gallery-icon">🖼️</div><div class="gallery-pill">[Example Image]</div></div>
-          <div class="gallery-caption">"Fitness creator, urban street, raw authentic energy…"</div>
-        </div>
-        <div class="gallery-item">
-          <div class="gallery-placeholder"><div class="gallery-icon">🖼️</div><div class="gallery-pill">[Example Image]</div></div>
-          <div class="gallery-caption">"Beauty creator, cosy cafe, candid natural, skin texture…"</div>
-        </div>
-        <div class="gallery-item">
-          <div class="gallery-placeholder"><div class="gallery-icon">🖼️</div><div class="gallery-pill">[Example Image]</div></div>
-          <div class="gallery-caption">"Travel creator, tropical beach, cinematic, 35mm f/1.8…"</div>
-        </div>
-        <div class="gallery-item">
-          <div class="gallery-placeholder"><div class="gallery-icon">🖼️</div><div class="gallery-pill">[Example Image]</div></div>
-          <div class="gallery-caption">"Business creator, studio white, polished editorial, 8K…"</div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <footer>
-    <span>AI Prompt Generator 2026</span> — Free Forever
-  </footer>
-
+<header>
+  <div class="badge">✦ Free AI Tool — No Sign-Up Needed</div>
+  <h1>Stop Making <span>Fake-Looking</span><br>AI Influencers</h1>
+  <p class="subtitle">Professional 3-Layer Prompt Engine — Ultra-Realistic Results in Seconds</p>
+</header>
+<div class="container">
+<!-- PLATFORM TOGGLE -->
+<div class="platform-toggle">
+  <button class="btn-platform active" data-platform="Instagram" data-ratio="4:5" onclick="selectPlatform(this)">📸 Instagram <span class="platform-ratio">4:5</span></button>
+  <button class="btn-platform" data-platform="TikTok" data-ratio="9:16" onclick="selectPlatform(this)">🎵 TikTok <span class="platform-ratio">9:16</span></button>
+  <button class="btn-platform" data-platform="YouTube" data-ratio="16:9" onclick="selectPlatform(this)">▶️ YouTube <span class="platform-ratio">16:9</span></button>
 </div>
 
+<!-- CODE LOADER -->
+<div class="code-loader-bar">
+  <span class="code-loader-label">Have a Character Code?</span>
+  <input class="code-loader-input" id="codeLoaderInput" type="text" placeholder="Paste code here e.g. FAS-4k2m9p-OLI" maxlength="200" />
+  <button class="btn-load" id="btnLoad" onclick="loadCharacterCode()">Load Character</button>
+</div>
+
+<!-- ══════════════════════════════════════
+     LAYER 1 — PHYSICAL IDENTITY
+     ══════════════════════════════════════ -->
+<div class="layer-label">Layer 1 — Physical Identity</div>
+
+<!-- Demographics -->
+<div class="form-section open" id="sec-demographics">
+  <button class="section-toggle" onclick="toggleSection('sec-demographics')">
+    <div class="section-toggle-left">
+      <div class="section-toggle-icon">👤</div>
+      <div><div class="section-toggle-title">Demographics</div><div class="section-toggle-meta">Gender, age, ethnicity</div></div>
+    </div>
+    <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
+  </button>
+  <div class="section-body">
+    <div class="form-grid">
+      <div class="field">
+        <label>Gender</label>
+        <select id="gender">
+          <option value="woman">Female</option>
+          <option value="man">Male</option>
+          <option value="non-binary person">Non-binary</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Age</label>
+        <input type="text" id="age" placeholder="e.g. early 20s, mid 30s" />
+      </div>
+      <div class="field field-full">
+        <label>Ethnicity</label>
+        <select id="ethnicity">
+          <option value="">No preference</option>
+          <option value="East Asian">East Asian</option>
+          <option value="South Asian">South Asian</option>
+          <option value="Southeast Asian">Southeast Asian</option>
+          <option value="Middle Eastern">Middle Eastern</option>
+          <option value="African">African</option>
+          <option value="West African">West African</option>
+          <option value="East African">East African</option>
+          <option value="European">European</option>
+          <option value="Latin American">Latin American</option>
+          <option value="Mixed ethnicity">Mixed ethnicity</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Facial Structure -->
+<div class="form-section" id="sec-face">
+  <button class="section-toggle" onclick="toggleSection('sec-face')">
+    <div class="section-toggle-left">
+      <div class="section-toggle-icon">👁</div>
+      <div><div class="section-toggle-title">Facial Structure</div><div class="section-toggle-meta">Face shape, eyes, nose, lips</div></div>
+    </div>
+    <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
+  </button>
+  <div class="section-body">
+    <div class="form-grid">
+      <div class="field">
+        <label>Face Shape</label>
+        <select id="face-shape">
+          <option value="">No preference</option>
+          <option value="oval face shape">Oval</option>
+          <option value="round face shape">Round</option>
+          <option value="square face shape">Square</option>
+          <option value="heart-shaped face">Heart</option>
+          <option value="diamond face shape">Diamond</option>
+          <option value="elongated face shape">Elongated</option>
+          <option value="tapered chin face shape">Tapered chin</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Eye Shape</label>
+        <select id="eye-shape">
+          <option value="">No preference</option>
+          <option value="almond-shaped eyes">Almond</option>
+          <option value="round eyes">Round</option>
+          <option value="hooded eyes">Hooded</option>
+          <option value="monolid eyes">Monolid</option>
+          <option value="upturned eyes">Upturned</option>
+          <option value="downturned eyes">Downturned</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Left Eye Colour</label>
+        <select id="eye-left">
+          <option value="brown eyes">Brown</option>
+          <option value="dark brown eyes">Dark brown</option>
+          <option value="hazel eyes">Hazel</option>
+          <option value="green eyes">Green</option>
+          <option value="blue eyes">Blue</option>
+          <option value="grey eyes">Grey</option>
+          <option value="amber eyes">Amber</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Right Eye Colour</label>
+        <select id="eye-right">
+          <option value="same">Match left eye</option>
+          <option value="brown">Brown</option>
+          <option value="dark brown">Dark brown</option>
+          <option value="hazel">Hazel</option>
+          <option value="green">Green</option>
+          <option value="blue">Blue</option>
+          <option value="grey">Grey</option>
+          <option value="amber">Amber</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Eye Expression</label>
+        <select id="eye-expression">
+          <option value="">No preference</option>
+          <option value="soft warm inviting gaze">Soft and warm</option>
+          <option value="intense direct powerful gaze">Intense and direct</option>
+          <option value="playful mischievous gaze">Playful</option>
+          <option value="dreamy distant gaze">Dreamy</option>
+          <option value="fierce editorial gaze">Fierce</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Nose Type</label>
+        <select id="nose">
+          <option value="">No preference</option>
+          <option value="straight nose">Straight</option>
+          <option value="button nose">Button</option>
+          <option value="refined delicate nose">Refined</option>
+          <option value="broad nose">Broad</option>
+          <option value="upturned nose">Upturned</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Lips</label>
+        <select id="lips">
+          <option value="">No preference</option>
+          <option value="full lips">Full</option>
+          <option value="thin lips">Thin</option>
+          <option value="cupid's bow lips">Cupid's bow</option>
+          <option value="wide lips">Wide</option>
+          <option value="pouty lips">Pouty</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Skin -->
+<div class="form-section" id="sec-skin">
+  <button class="section-toggle" onclick="toggleSection('sec-skin')">
+    <div class="section-toggle-left">
+      <div class="section-toggle-icon">✨</div>
+      <div><div class="section-toggle-title">Skin</div><div class="section-toggle-meta">Tone, texture, marks</div></div>
+    </div>
+    <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
+  </button>
+  <div class="section-body">
+    <div class="form-grid">
+      <div class="field field-full">
+        <label>Skin Tone</label>
+        <select id="skin-tone">
+          <option value="Fitzpatrick Type I, very fair pale skin, cool undertones, porcelain complexion">Fitzpatrick I — Very fair / Porcelain</option>
+          <option value="Fitzpatrick Type II, fair skin with pink undertones, light complexion">Fitzpatrick II — Fair with pink undertones</option>
+          <option value="Fitzpatrick Type III, light beige skin, neutral undertones">Fitzpatrick III — Light beige</option>
+          <option value="Fitzpatrick Type IV, olive medium skin, warm golden undertones">Fitzpatrick IV — Olive / Medium</option>
+          <option value="Fitzpatrick Type V, medium brown skin, warm rich undertones">Fitzpatrick V — Medium brown</option>
+          <option value="Fitzpatrick Type VI, deep brown skin, deep rich undertones">Fitzpatrick VI — Deep brown</option>
+        </select>
+      </div>
+      <div class="field field-full">
+        <label>Skin Texture Realism</label>
+        <select id="skin-texture">
+          <option value="clean smooth even skin">Clean and smooth</option>
+          <option value="visible pores natural skin texture">Visible pores</option>
+          <option value="micro-detail skin texture, subtle surface variation, natural imperfections">Micro-detail with subtle texture</option>
+          <option value="raw natural skin, visible freckles, natural imperfections, no smoothing">Raw natural with freckles and imperfections</option>
+        </select>
+      </div>
+      <div class="field field-full">
+        <label>Distinguishing Marks</label>
+        <div class="checkbox-group" id="marks-group">
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="natural freckles across face"><span class="cb-check"></span>Natural freckles</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="small beauty mark on face"><span class="cb-check"></span>Beauty mark</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="subtle acne scars on skin"><span class="cb-check"></span>Subtle acne scars</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="faint natural laugh lines"><span class="cb-check"></span>Faint laugh lines</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="mole near lip"><span class="cb-check"></span>Mole near lip</label>
+          <label class="cb-label checked" id="marks-none" onclick="toggleNone('marks-none','marks-group',event)"><input type="checkbox" value="" checked><span class="cb-check">✓</span>None</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Hair -->
+<div class="form-section" id="sec-hair">
+  <button class="section-toggle" onclick="toggleSection('sec-hair')">
+    <div class="section-toggle-left">
+      <div class="section-toggle-icon">💇</div>
+      <div><div class="section-toggle-title">Hair</div><div class="section-toggle-meta">Colour, texture, style</div></div>
+    </div>
+    <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
+  </button>
+  <div class="section-body">
+    <div class="form-grid">
+      <div class="field field-full">
+        <label>Hair Colour</label>
+        <input type="text" id="hair-color" placeholder="e.g. platinum blonde with ash roots, jet black, warm auburn" />
+      </div>
+      <div class="field">
+        <label>Hair Texture</label>
+        <select id="hair-texture">
+          <option value="">No preference</option>
+          <option value="fine straight hair">Fine and straight</option>
+          <option value="medium wavy hair">Medium wavy</option>
+          <option value="thick curly hair">Thick and curly</option>
+          <option value="coily natural hair">Coily and natural</option>
+          <option value="fine wispy hair">Fine and wispy</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Hair Style</label>
+        <input type="text" id="hair-style" placeholder="e.g. high messy bun, shoulder length loose waves" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Body -->
+<div class="form-section" id="sec-body">
+  <button class="section-toggle" onclick="toggleSection('sec-body')">
+    <div class="section-toggle-left">
+      <div class="section-toggle-icon">🧍</div>
+      <div><div class="section-toggle-title">Body & Expression</div><div class="section-toggle-meta">Body type, expression, gaze</div></div>
+    </div>
+    <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
+  </button>
+  <div class="section-body">
+    <div class="form-grid">
+      <div class="field">
+        <label>Body Type</label>
+        <select id="body-type">
+          <option value="">No preference</option>
+          <option value="slim lean body type">Slim and lean</option>
+          <option value="athletic toned body type">Athletic and toned</option>
+          <option value="curvy body type">Curvy</option>
+          <option value="petite body type">Petite</option>
+          <option value="plus size body type">Plus size</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Facial Expression</label>
+        <select id="expression">
+          <option value="gentle half smile">Gentle half smile</option>
+          <option value="relaxed neutral expression">Relaxed neutral</option>
+          <option value="full genuine laugh">Full genuine laugh</option>
+          <option value="serious editorial expression">Serious editorial</option>
+          <option value="soft pout expression">Soft pout</option>
+          <option value="surprised expression">Surprised</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Gaze Direction</label>
+        <select id="gaze">
+          <option value="direct eye contact with camera">Direct eye contact</option>
+          <option value="slightly off camera gaze">Slightly off camera</option>
+          <option value="looking down thoughtfully">Looking down</option>
+          <option value="looking over shoulder">Over shoulder</option>
+          <option value="eyes closed serene">Eyes closed</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     LAYER 2 — PHOTOGRAPHY
+     ══════════════════════════════════════ -->
+<div class="layer-label" style="margin-top:22px">Layer 2 — Photography</div>
+
+<!-- Lighting -->
+<div class="form-section open" id="sec-lighting">
+  <button class="section-toggle" onclick="toggleSection('sec-lighting')">
+    <div class="section-toggle-left">
+      <div class="section-toggle-icon">💡</div>
+      <div><div class="section-toggle-title">Lighting</div><div class="section-toggle-meta">Style, temperature, direction</div></div>
+    </div>
+    <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
+  </button>
+  <div class="section-body">
+    <div class="form-grid">
+      <div class="field">
+        <label>Lighting Style</label>
+        <select id="light-style">
+          <option value="soft natural daylight, diffused ambient light">Soft natural daylight</option>
+          <option value="golden hour backlight, warm amber lens flare, sun-kissed glow">Golden hour backlight</option>
+          <option value="studio strobe with large octabox softbox, clean catch light">Studio strobe with octabox</option>
+          <option value="dramatic chiaroscuro, deep shadows, high contrast light">Dramatic chiaroscuro</option>
+          <option value="rim light with dark background, edge separation glow">Rim light with dark background</option>
+          <option value="mixed ambient street light, urban glow, natural colour temperature">Mixed ambient street light</option>
+          <option value="warm tungsten interior light, intimate amber glow">Warm tungsten interior</option>
+          <option value="blue hour twilight, cool ambient dusk light">Blue hour twilight</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Light Temperature</label>
+        <select id="light-temp">
+          <option value="">No preference</option>
+          <option value="3200K warm tungsten colour temperature">3200K warm tungsten</option>
+          <option value="4500K neutral morning colour temperature">4500K neutral morning</option>
+          <option value="5600K daylight balanced colour temperature">5600K daylight balanced</option>
+          <option value="6500K cool overcast colour temperature">6500K cool overcast</option>
+          <option value="mixed colour temperature, variable light sources">Mixed temperature</option>
+        </select>
+      </div>
+      <div class="field field-full">
+        <label>Light Direction</label>
+        <select id="light-dir">
+          <option value="">No preference</option>
+          <option value="front facing flat lighting">Front facing flat</option>
+          <option value="45 degree Rembrandt lighting">45 degree Rembrandt</option>
+          <option value="side split lighting, half face lit">Side split lighting</option>
+          <option value="rim backlight only, silhouette separation">Rim / backlight only</option>
+          <option value="butterfly under nose lighting">Butterfly under nose</option>
+          <option value="natural window side light">Natural window side</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Camera -->
+<div class="form-section open" id="sec-camera">
+  <button class="section-toggle" onclick="toggleSection('sec-camera')">
+    <div class="section-toggle-left">
+      <div class="section-toggle-icon">📷</div>
+      <div><div class="section-toggle-title">Camera</div><div class="section-toggle-meta">Body, lens, aperture, angle</div></div>
+    </div>
+    <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
+  </button>
+  <div class="section-body">
+    <div class="form-grid">
+      <div class="field">
+        <label>Camera Body</label>
+        <select id="camera-body">
+          <option value="Sony A7R V">Sony A7R V</option>
+          <option value="Canon EOS R5">Canon EOS R5</option>
+          <option value="Hasselblad H6D 100c">Hasselblad H6D 100c</option>
+          <option value="Leica SL2">Leica SL2</option>
+          <option value="Phase One XF IQ4">Phase One XF IQ4</option>
+          <option value="ARRI Alexa LF cinematic camera">ARRI Alexa LF — cinematic</option>
+          <option value="RED V-RAPTOR 8K cinema camera">RED V-RAPTOR 8K</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Lens Focal Length</label>
+        <select id="lens">
+          <option value="24mm wide angle lens">24mm wide angle</option>
+          <option value="35mm standard wide lens">35mm standard wide</option>
+          <option value="50mm standard lens">50mm standard</option>
+          <option value="85mm portrait prime lens">85mm portrait prime</option>
+          <option value="100mm macro detail lens">100mm macro detail</option>
+          <option value="135mm compressed portrait lens">135mm compressed portrait</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Aperture</label>
+        <select id="aperture">
+          <option value="f/1.2 extreme bokeh, razor thin depth of field">f/1.2 extreme bokeh</option>
+          <option value="f/1.4 shallow depth of field, creamy bokeh">f/1.4 shallow</option>
+          <option value="f/2.0 moderate depth of field">f/2.0 moderate</option>
+          <option value="f/4.0 medium depth of field">f/4.0 medium</option>
+          <option value="f/8.0 deep focus, everything sharp">f/8.0 deep focus everything sharp</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Camera Angle</label>
+        <select id="cam-angle">
+          <option value="eye level straight on">Eye level straight on</option>
+          <option value="10 degrees above eye level">10 degrees above</option>
+          <option value="low angle looking up at subject">Low angle looking up</option>
+          <option value="slight dutch tilt angle">Dutch tilt slight</option>
+          <option value="bird's eye overhead angle">Bird's eye</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Post Processing -->
+<div class="form-section" id="sec-post">
+  <button class="section-toggle" onclick="toggleSection('sec-post')">
+    <div class="section-toggle-left">
+      <div class="section-toggle-icon">🎨</div>
+      <div><div class="section-toggle-title">Post Processing</div><div class="section-toggle-meta">Colour grade, sharpness</div></div>
+    </div>
+    <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
+  </button>
+  <div class="section-body">
+    <div class="form-grid">
+      <div class="field">
+        <label>Colour Grading</label>
+        <select id="color-grade">
+          <option value="natural and neutral colour grade">Natural and neutral</option>
+          <option value="warm golden editorial colour grade">Warm golden editorial</option>
+          <option value="cool cinematic blue teal colour grade">Cool cinematic blue teal</option>
+          <option value="vintage Kodak film colour grade, analog warmth">Vintage Kodak film</option>
+          <option value="high contrast fashion colour grade">High contrast fashion</option>
+          <option value="soft pastel muted colour grade">Soft pastel muted</option>
+          <option value="vibrant oversaturated colour grade">Vibrant oversaturated</option>
+          <option value="Netflix documentary grade, clean neutral">Netflix documentary grade</option>
+          <option value="HBO prestige drama colour grade, deep rich tones">HBO prestige drama</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Sharpness</label>
+        <select id="sharpness">
+          <option value="tack sharp ultra detailed, maximum resolution">Tack sharp ultra detailed</option>
+          <option value="natural film softness, organic texture">Natural film softness</option>
+          <option value="slightly soft dreamy quality">Slightly soft dreamy</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     LAYER 3 — PERSONALITY & CONTEXT
+     ══════════════════════════════════════ -->
+<div class="layer-label" style="margin-top:22px">Layer 3 — Personality &amp; Context</div>
+
+<!-- Personality -->
+<div class="form-section" id="sec-personality">
+  <button class="section-toggle" onclick="toggleSection('sec-personality')">
+    <div class="section-toggle-left">
+      <div class="section-toggle-icon">⚡</div>
+      <div><div class="section-toggle-title">Personality</div><div class="section-toggle-meta">Keywords, content niche</div></div>
+    </div>
+    <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
+  </button>
+  <div class="section-body">
+    <div class="form-grid">
+      <div class="field field-full">
+        <label>Personality Keywords</label>
+        <div class="checkbox-group" id="personality-group">
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="confident"><span class="cb-check"></span>Confident</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="warm and approachable"><span class="cb-check"></span>Warm</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="mysterious"><span class="cb-check"></span>Mysterious</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="playful"><span class="cb-check"></span>Playful</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="sophisticated"><span class="cb-check"></span>Sophisticated</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="aspirational"><span class="cb-check"></span>Aspirational</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="relatable"><span class="cb-check"></span>Relatable</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="bold"><span class="cb-check"></span>Bold</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="ironic"><span class="cb-check"></span>Ironic</label>
+        </div>
+      </div>
+      <div class="field field-full">
+        <label>Content Niche</label>
+        <select id="niche">
+          <option value="">No preference</option>
+          <option value="luxury lifestyle content creator">Luxury lifestyle</option>
+          <option value="fitness and wellness content creator">Fitness and wellness</option>
+          <option value="high fashion editorial content creator">High fashion editorial</option>
+          <option value="street style content creator">Street style</option>
+          <option value="travel and adventure content creator">Travel and adventure</option>
+          <option value="business and finance content creator">Business and finance</option>
+          <option value="beauty and cosmetics content creator">Beauty and cosmetics</option>
+          <option value="food and hospitality content creator">Food and hospitality</option>
+          <option value="tech and gaming content creator">Tech and gaming</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Fashion -->
+<div class="form-section open" id="sec-fashion">
+  <button class="section-toggle" onclick="toggleSection('sec-fashion')">
+    <div class="section-toggle-left">
+      <div class="section-toggle-icon">👗</div>
+      <div><div class="section-toggle-title">Fashion</div><div class="section-toggle-meta">Clothing, palette, accessories</div></div>
+    </div>
+    <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
+  </button>
+  <div class="section-body">
+    <div class="form-grid">
+      <div class="field">
+        <label>Clothing Style</label>
+        <select id="clothing">
+          <option value="">No preference</option>
+          <option value="minimalist streetwear outfit">Minimalist streetwear</option>
+          <option value="high fashion editorial clothing">High fashion editorial</option>
+          <option value="business professional attire">Business professional</option>
+          <option value="athleisure fitness outfit">Athleisure</option>
+          <option value="bohemian aesthetic outfit">Bohemian aesthetic</option>
+          <option value="luxury brand designer clothing">Luxury brand</option>
+          <option value="vintage retro inspired outfit">Vintage retro</option>
+          <option value="casual everyday outfit">Casual everyday</option>
+          <option value="swimwear resort outfit">Swimwear resort</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Colour Palette</label>
+        <select id="palette">
+          <option value="">No preference</option>
+          <option value="neutral whites and beige colour palette">Neutral whites and beige</option>
+          <option value="all black monochrome outfit">All black monochrome</option>
+          <option value="bold primary colours outfit">Bold primary colours</option>
+          <option value="earth tones colour palette">Earth tones</option>
+          <option value="pastel colour palette">Pastels</option>
+          <option value="jewel tones colour palette">Jewel tones</option>
+          <option value="patterned and printed outfit">Patterned and print</option>
+        </select>
+      </div>
+      <div class="field field-full">
+        <label>Accessories</label>
+        <div class="checkbox-group" id="acc-group">
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="thin gold necklace"><span class="cb-check"></span>Gold necklace</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="silver jewellery"><span class="cb-check"></span>Silver jewellery</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="designer sunglasses"><span class="cb-check"></span>Designer sunglasses</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="baseball cap"><span class="cb-check"></span>Baseball cap</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="luxury handbag"><span class="cb-check"></span>Luxury handbag</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="smart watch on wrist"><span class="cb-check"></span>Smart watch</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="hoop earrings"><span class="cb-check"></span>Hoop earrings</label>
+          <label class="cb-label checked" id="acc-none" onclick="toggleNone('acc-none','acc-group',event)"><input type="checkbox" value="" checked><span class="cb-check">✓</span>None</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Action & Environment -->
+<div class="form-section open" id="sec-action">
+  <button class="section-toggle" onclick="toggleSection('sec-action')">
+    <div class="section-toggle-left">
+      <div class="section-toggle-icon">🌆</div>
+      <div><div class="section-toggle-title">Action &amp; Environment</div><div class="section-toggle-meta">Pose, scene, location</div></div>
+    </div>
+    <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
+  </button>
+  <div class="section-body">
+    <div class="form-grid">
+      <div class="field">
+        <label>Body Pose</label>
+        <select id="pose">
+          <option value="standing relaxed natural pose">Standing relaxed</option>
+          <option value="seated candid pose">Seated candid</option>
+          <option value="walking mid stride dynamic pose">Walking mid stride</option>
+          <option value="leaning against wall casual pose">Leaning against wall</option>
+          <option value="sitting in car editorial pose">Sitting in car</option>
+          <option value="looking over shoulder pose">Looking over shoulder</option>
+          <option value="arms crossed powerful confident pose">Arms crossed powerful</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Hand Position</label>
+        <select id="hands">
+          <option value="">Natural at sides</option>
+          <option value="hand touching hair gently">Touching hair gently</option>
+          <option value="holding coffee cup">Holding coffee cup</option>
+          <option value="holding phone">Holding phone</option>
+          <option value="one hand on chin thoughtful">One hand on chin</option>
+          <option value="hands in pockets relaxed">Hands in pockets</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Object Held</label>
+        <select id="object">
+          <option value="">Nothing</option>
+          <option value="holding clear smartphone">Clear smartphone</option>
+          <option value="holding coffee cup">Coffee cup</option>
+          <option value="holding sunglasses in hand">Sunglasses in hand</option>
+          <option value="holding shopping bags">Shopping bags</option>
+          <option value="holding book or journal">Book or journal</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Scene Location</label>
+        <select id="location">
+          <option value="modern minimalist apartment interior">Modern minimalist apartment</option>
+          <option value="luxury hotel lobby interior">Luxury hotel lobby</option>
+          <option value="urban city street environment">Urban city street</option>
+          <option value="coffee shop interior">Coffee shop interior</option>
+          <option value="rooftop city view">Rooftop city view</option>
+          <option value="natural outdoor park environment">Natural outdoor park</option>
+          <option value="beach coastline environment">Beach coastline</option>
+          <option value="high fashion photography studio">High fashion studio</option>
+          <option value="car interior">Car interior</option>
+        </select>
+      </div>
+      <div class="field field-full">
+        <div class="label-row"><label>Scene Detail</label><span class="optional-tag">Optional</span></div>
+        <input type="text" id="scene-detail" placeholder="e.g. dark leather seats, floor to ceiling windows, neon signs in background" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GENERATE -->
+<div class="generate-wrap">
+  <button class="btn-generate" onclick="generatePrompts()">⚡ Generate 5 Professional Prompts</button>
+</div>
+
+<!-- OUTPUT -->
+<div id="output">
+  <div class="output-header">✦ Your 5 Professional Prompts</div>
+  <div class="prompt-cards" id="promptCards"></div>
+</div>
+
+<!-- CHARACTER LOCK -->
+<div id="lockSection">
+  <div class="lock-header">🔒 Character Lock Code</div>
+  <div class="lock-code-row">
+    <span class="lock-code" id="lockCode">—</span>
+    <button class="btn-copy-code" onclick="copyLockCode(this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Code</button>
+    <button class="btn-load" onclick="saveCurrentCharacter()" style="margin-left:2px">💾 Save</button>
+  </div>
+  <p class="lock-persist-note">Save this code to <strong>instantly reload this exact influencer</strong> in any future session — never lose your best character again.</p>
+</div>
+
+<!-- SAVED CHARACTERS -->
+<div id="savedCharsSection" style="display:none">
+  <div class="saved-chars-header">⭐ Saved Characters</div>
+  <p class="saved-chars-sub">Click any card to instantly reload that character.</p>
+  <div class="saved-chars-grid" id="savedCharsGrid"></div>
+</div>
+
+<!-- AFFILIATES -->
+<div id="affiliates">
+  <div class="section-header">✦ Put Your Prompt to Work</div>
+  <div class="aff-grid">
+    <a href="https://leonardo.ai" target="_blank" rel="noopener" class="btn-aff btn-aff-purple">🎨 Generate This Image Free<br><span style="font-weight:400;font-size:11px;opacity:0.85">via Leonardo AI</span></a>
+    <a href="https://heygen.com" target="_blank" rel="noopener" class="btn-aff btn-aff-dark">🎬 Animate Your Influencer<br><span style="font-weight:400;font-size:11px;color:var(--muted)">with HeyGen</span></a>
+    <a href="https://prompthero.com" target="_blank" rel="noopener" class="btn-aff btn-aff-dark">📚 Get 10,000 More Prompts<br><span style="font-weight:400;font-size:11px;color:var(--muted)">on PromptHero</span></a>
+  </div>
+  <p class="aff-disclaimer">These are affiliate links — we earn a small commission if you sign up, at no cost to you.</p>
+</div>
+
+<!-- GALLERY -->
+<div id="gallery">
+  <div class="section-header">✦ Real Results From This Tool</div>
+  <p class="gallery-sub">Examples generated using prompts from this tool on Leonardo AI PhotoReal.</p>
+  <div class="gallery-grid">
+    <div class="gallery-item"><div class="gallery-placeholder"><div class="gallery-icon">🖼️</div><div class="gallery-pill">[Example Image]</div></div><div class="gallery-caption">"Close-up, early 20s, East Asian, golden hour, Hasselblad…"</div></div>
+    <div class="gallery-item"><div class="gallery-placeholder"><div class="gallery-icon">🖼️</div><div class="gallery-pill">[Example Image]</div></div><div class="gallery-caption">"Three-quarter, fashion editorial, luxury hotel, chiaroscuro…"</div></div>
+    <div class="gallery-item"><div class="gallery-placeholder"><div class="gallery-icon">🖼️</div><div class="gallery-pill">[Example Image]</div></div><div class="gallery-caption">"Full body cinematic, urban street, ARRI Alexa, blue teal…"</div></div>
+    <div class="gallery-item"><div class="gallery-placeholder"><div class="gallery-icon">🖼️</div><div class="gallery-pill">[Example Image]</div></div><div class="gallery-caption">"Candid lifestyle, coffee shop, documentary 35mm…"</div></div>
+    <div class="gallery-item"><div class="gallery-placeholder"><div class="gallery-icon">🖼️</div><div class="gallery-pill">[Example Image]</div></div><div class="gallery-caption">"Detail mood, extreme close-up eyes, HBO prestige grade…"</div></div>
+    <div class="gallery-item"><div class="gallery-placeholder"><div class="gallery-icon">🖼️</div><div class="gallery-pill">[Example Image]</div></div><div class="gallery-caption">"Business creator, rooftop city view, Phase One IQ4…"</div></div>
+  </div>
+</div>
+
+</div><!-- /container -->
+<footer><span>AI Prompt Generator 2026</span> — Free Forever</footer>
+</div><!-- /page -->
 <script>
-// ─── DATA ───────────────────────────────────────────────────────────────────
+// ─── CONSTANTS ────────────────────────────────────────────────────────────────
 
-const BG_DATA = {
-  studio_white: {
-    label: "Studio White Background",
-    env:   "seamless white studio backdrop, professional photography studio",
-    light: "professional studio strobe, large octabox softbox, clean catch light, subtle shadow definition, controlled studio environment"
-  },
-  golden_hour: {
-    label: "Outdoor Golden Hour",
-    env:   "outdoor location, lush natural surroundings, open sky",
-    light: "warm golden backlight, long natural shadows, sun-kissed skin glow, catch light in eyes, golden hour warmth"
-  },
-  urban: {
-    label: "Urban Street",
-    env:   "city street environment, urban architecture, concrete surroundings",
-    light: "mixed ambient streetlight, natural colour temperature, candid documentary lighting, urban glow"
-  },
-  luxury: {
-    label: "Luxury Interior",
-    env:   "high-end luxury interior, marble surfaces, velvet textures, designer furniture",
-    light: "warm tungsten ambient, window side natural fill, soft specular highlights, interior warmth"
-  },
-  beach: {
-    label: "Tropical Beach",
-    env:   "tropical beach setting, turquoise water, white sand, palm trees",
-    light: "harsh tropical midday sun, natural skin glow, bright ambient fill, ocean reflections"
-  },
-  cafe: {
-    label: "Cosy Cafe",
-    env:   "cosy cafe interior, wooden furniture, exposed brick, coffee equipment",
-    light: "warm tungsten interior, soft window side light, intimate ambient glow, warm colour cast"
-  }
-};
+const HIDDEN_TOKENS = "IMG_9854.CR2, C0001.R3D, editorial_stills_archive, uncompressed RAW still, organic film grain, perfect exposure, cinematic_color_grade";
 
-const ANTI_PLASTIC = [
-  "detailed skin texture",
-  "visible pores",
-  "subtle natural freckles",
-  "soft laugh lines",
-  "natural asymmetry",
-  "real human imperfections",
-  "no airbrushing",
-  "no skin smoothing",
-  "natural subsurface scattering"
-];
+const ANTI_PLASTIC = "detailed skin texture, visible pores, natural subsurface scattering, real human imperfections, no airbrushing, no skin smoothing, natural asymmetry, soft laugh lines";
 
-const DEPTH_LAYERS = [
-  "subject in sharp focus foreground",
-  "softly blurred midground environment",
-  "gently defocused background",
-  "natural depth separation"
-];
-
-const HIDDEN_TOKENS = [
-  "IMG_9854.CR2",
-  "C0001.R3D",
-  "editorial_stills_archive",
-  "uncompressed RAW still",
-  "organic film grain",
-  "perfect exposure",
-  "cinematic_color_grade"
-];
-
-const NEGATIVE = "plastic skin, artificial smoothing, airbrushed face, uncanny valley, oversaturated, stock photo lighting, fake smile, blurry details, wax figure look, mannequin skin, unnatural eyes, digital painting look, illustration style, cartoon, CGI render";
+const NEGATIVE = "plastic skin, artificial smoothing, airbrushed face, uncanny valley, oversaturated, stock photo lighting, fake smile, blurry details, wax figure look, mannequin skin, unnatural eyes, digital painting look, illustration style, cartoon, CGI render, extra limbs, disfigured, deformed";
 
 const UPGRADE_TOKENS = "Kodak Portra 400 film grain, f/1.4 bokeh render, natural skin pores visible, subtle facial asymmetry, real human micro-expressions, analog warmth";
 
-// ─── FORM HELPERS ────────────────────────────────────────────────────────────
+// Per-card Leonardo AI settings
+const CARD_SETTINGS = [
+  { model: 'Lucid Realism',   preset: 'Portrait Perfect', guidance: '7', tooltip: null },
+  { model: 'Lucid Realism',   preset: 'Portrait Perfect', guidance: '7', tooltip: null },
+  { model: 'Cinematic Kino',  preset: 'Cinematic',        guidance: '8', tooltip: 'Full body shots work best with Cinematic Kino — forces the AI to show the complete figure in environment' },
+  { model: 'Lucid Realism',   preset: 'Cinematic',        guidance: '7', tooltip: null },
+  { model: 'Lucid Realism',   preset: 'Portrait Perfect', guidance: '7', tooltip: null },
+];
+
+// ─── PLATFORM ─────────────────────────────────────────────────────────────────
+
+let activePlatform = { name: 'Instagram', ratio: '4:5' };
+
+function selectPlatform(btn) {
+  document.querySelectorAll('.btn-platform').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activePlatform = { name: btn.dataset.platform, ratio: btn.dataset.ratio };
+}
+
+// ─── FORM HELPERS ─────────────────────────────────────────────────────────────
 
 function toggleSection(id) {
-  const el = document.getElementById(id);
-  el.classList.toggle('open');
+  document.getElementById(id).classList.toggle('open');
 }
 
 function toggleCb(lbl, event) {
   if (event) event.preventDefault();
   if (lbl.id && lbl.id.endsWith('-none')) return;
-
-  const isChecked = !lbl.classList.contains('checked');
-  lbl.classList.toggle('checked', isChecked);
-  const cb = lbl.querySelector('input[type="checkbox"]');
-  cb.checked = isChecked;
-
+  const on = !lbl.classList.contains('checked');
+  lbl.classList.toggle('checked', on);
+  lbl.querySelector('input').checked = on;
+  lbl.querySelector('.cb-check').textContent = on ? '\u2713' : '';
   const group = lbl.closest('.checkbox-group');
   const noneBtn = group.querySelector('[id$="-none"]');
-
-  if (isChecked) {
-    if (noneBtn) {
-      noneBtn.classList.remove('checked');
-      noneBtn.querySelector('.cb-check').textContent = '';
-      noneBtn.querySelector('input').checked = false;
-    }
-    lbl.querySelector('.cb-check').textContent = '\u2713';
-  } else {
-    lbl.querySelector('.cb-check').textContent = '';
-    const anyChecked = [...group.querySelectorAll('.cb-label:not([id$="-none"])')].some(function(l) { return l.classList.contains('checked'); });
-    if (!anyChecked && noneBtn) {
+  if (on && noneBtn) {
+    noneBtn.classList.remove('checked');
+    noneBtn.querySelector('.cb-check').textContent = '';
+    noneBtn.querySelector('input').checked = false;
+  }
+  if (!on) {
+    const anyOn = [...group.querySelectorAll('.cb-label:not([id$="-none"])')].some(l => l.classList.contains('checked'));
+    if (!anyOn && noneBtn) {
       noneBtn.classList.add('checked');
       noneBtn.querySelector('.cb-check').textContent = '\u2713';
       noneBtn.querySelector('input').checked = true;
@@ -1183,9 +945,9 @@ function toggleCb(lbl, event) {
 
 function toggleNone(noneId, groupId, event) {
   if (event) event.preventDefault();
-  const group   = document.getElementById(groupId);
+  const group = document.getElementById(groupId);
   const noneBtn = document.getElementById(noneId);
-  group.querySelectorAll('.cb-label:not([id$="-none"])').forEach(function(lbl) {
+  group.querySelectorAll('.cb-label:not([id$="-none"])').forEach(lbl => {
     lbl.classList.remove('checked');
     lbl.querySelector('.cb-check').textContent = '';
     lbl.querySelector('input').checked = false;
@@ -1196,212 +958,268 @@ function toggleNone(noneId, groupId, event) {
 }
 
 function getCheckedValues(groupId) {
-  const group = document.getElementById(groupId);
   const vals = [];
-  group.querySelectorAll('.cb-label.checked:not([id$="-none"])').forEach(lbl => {
+  document.querySelectorAll(`#${groupId} .cb-label.checked:not([id$="-none"])`).forEach(lbl => {
     const v = lbl.querySelector('input').value;
     if (v) vals.push(v);
   });
-  return vals.length ? vals.join(', ') : '';
+  return vals;
 }
 
-// ─── PLATFORM ────────────────────────────────────────────────────────────────
-
-let activePlatform = { name: 'Instagram', ratio: '4:5' };
-
-function selectPlatform(btn) {
-  document.querySelectorAll('.btn-platform').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  activePlatform = { name: btn.dataset.platform, ratio: btn.dataset.ratio };
+function val(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
 }
 
-// ─── PROMPT BUILDER ─────────────────────────────────────────────────────────
+// ─── READ ALL FIELDS ──────────────────────────────────────────────────────────
 
-function buildPrompt(shotType, age, skin, hair, style, bgKey, mood, extras) {
-  const bg = BG_DATA[bgKey];
+function readAllFields() {
+  const eyeLeft  = val('eye-left');
+  const eyeRight = val('eye-right');
+  const eyeDesc  = eyeRight === 'same'
+    ? eyeLeft
+    : `heterochromia, left ${eyeLeft.replace(' eyes','')} eye, right ${eyeRight} eye`;
 
-  // Shot-specific tokens
-  const shots = {
-    closeup: {
-      prefix:  null,
-      framing: "extreme close-up portrait, tight face crop",
-      lens:    "Sony A7III camera, 85mm f/1.4 prime lens, razor-thin depth of field, bokeh background"
-    },
-    threequarter: {
-      prefix:  null,
-      framing: "three-quarter body shot, waist-to-head framing, dynamic posture",
-      lens:    "Sony A7III camera, 50mm f/2.0 lens, mid depth of field, face and torso in frame"
-    },
-    environmental: {
-      prefix:  "AI-generated editorial photograph, fictional digital persona,",
-      framing: "editorial three-quarter composition, photographed at location, wide scene context",
-      lens:    "Sony A7III camera, 35mm f/1.8 wide lens, deep field, environment storytelling"
-    }
+  const hairColor   = val('hair-color');
+  const hairTexture = val('hair-texture');
+  const hairStyle   = val('hair-style');
+  const hairDesc    = [hairColor, hairTexture, hairStyle].filter(Boolean).join(', ');
+
+  const personality = getCheckedValues('personality-group');
+  const marks       = getCheckedValues('marks-group');
+  const accessories = getCheckedValues('acc-group');
+
+  return {
+    // Layer 1
+    gender:       val('gender'),
+    age:          val('age') || 'early 20s',
+    ethnicity:    val('ethnicity'),
+    faceShape:    val('face-shape'),
+    eyeShape:     val('eye-shape'),
+    eyeDesc,
+    eyeExpression: val('eye-expression'),
+    nose:         val('nose'),
+    lips:         val('lips'),
+    skinTone:     val('skin-tone'),
+    skinTexture:  val('skin-texture'),
+    marks:        marks.join(', '),
+    hairDesc:     hairDesc || 'natural hair',
+    bodyType:     val('body-type'),
+    expression:   val('expression'),
+    gaze:         val('gaze'),
+    // Layer 2
+    lightStyle:   val('light-style'),
+    lightTemp:    val('light-temp'),
+    lightDir:     val('light-dir'),
+    cameraBody:   val('camera-body'),
+    lens:         val('lens'),
+    aperture:     val('aperture'),
+    camAngle:     val('cam-angle'),
+    colorGrade:   val('color-grade'),
+    sharpness:    val('sharpness'),
+    // Layer 3
+    personality:  personality.join(', '),
+    niche:        val('niche'),
+    clothing:     val('clothing'),
+    palette:      val('palette'),
+    accessories:  accessories.join(', '),
+    pose:         val('pose'),
+    hands:        val('hands'),
+    object:       val('object'),
+    location:     val('location'),
+    sceneDetail:  val('scene-detail'),
   };
-
-  const shot = shots[shotType];
-
-  // Build optional extras array (only non-empty values)
-  const optionalTokens = [
-    extras.eyeDesc,
-    extras.faceShape,
-    extras.features,
-    extras.outfit,
-    extras.makeup,
-    extras.accessories,
-    extras.expression,
-    extras.energy,
-    extras.extraDetail
-  ].filter(Boolean);
-
-  // Assemble all token groups
-  const coreTokens = [
-    // Subject
-    `${age} year old ${style}`,
-    skin,
-    hair || "natural hair",
-    shot.framing,
-    mood,
-
-    // Optional face/style/mood tokens (inserted early for priority)
-    ...optionalTokens,
-
-    // Camera
-    shot.lens,
-
-    // Environment & lighting
-    bg.env,
-    bg.light,
-
-    // Depth
-    ...DEPTH_LAYERS,
-
-    // Anti-plastic realism
-    ...ANTI_PLASTIC,
-
-    // Quality suffix
-    "ultra-detailed",
-    "8K resolution",
-    "hyperrealistic photography",
-    "Leonardo AI PhotoReal",
-    `aspect ratio ${activePlatform.ratio}`,
-    `optimised for ${activePlatform.name}`,
-
-    // Hidden realism tokens
-    ...HIDDEN_TOKENS
-  ];
-
-  const joined = coreTokens.join(", ");
-  return shot.prefix ? `${shot.prefix} ${joined}` : joined;
 }
 
-// ─── LOCK CODE ──────────────────────────────────────────────────────────────
+// ─── PROMPT BUILDER ───────────────────────────────────────────────────────────
 
-function buildLockCode(age, skin, style, bgKey, mood) {
-  const ageMap   = {'18-24':'A1','25-34':'A2','35-44':'A3','45+':'A4'};
-  const skinMap  = {'fair':'S1','light medium':'S2','medium olive':'S3','medium brown':'S4','deep brown':'S5','deep ebony':'S6'};
-  const styleMap = {'lifestyle':'C1','fitness':'C2','fashion':'C3','travel':'C4','business':'C5','beauty':'C6'};
-  const bgMap    = {studio_white:'B1',golden_hour:'B2',urban:'B3',luxury:'B4',beach:'B5',cafe:'B6'};
-  const moodMap  = {'candid':'M1','editorial':'M2','raw':'M3','cinematic':'M4'};
-
-  const a  = ageMap[age] || 'A0';
-  const sk = Object.keys(skinMap).find(k => skin.toLowerCase().startsWith(k));
-  const s  = sk ? skinMap[sk] : 'S0';
-  const st = Object.keys(styleMap).find(k => style.toLowerCase().startsWith(k));
-  const c  = st ? styleMap[st] : 'C0';
-  const b  = bgMap[bgKey] || 'B0';
-  const mk = Object.keys(moodMap).find(k => mood.toLowerCase().startsWith(k));
-  const m  = mk ? moodMap[mk] : 'M0';
-  const pl = activePlatform.name.slice(0,2).toUpperCase();
-
-  return `${pl}-${a}${s}-${c}${b}-${m}`;
+function buildSubjectBlock(f) {
+  return [
+    f.ethnicity,
+    f.age,
+    f.gender,
+    f.bodyType,
+    f.faceShape,
+    f.eyeShape,
+    f.eyeDesc,
+    f.eyeExpression,
+    f.nose,
+    f.lips,
+    f.skinTone,
+    f.skinTexture,
+    f.marks,
+    f.hairDesc,
+  ].filter(Boolean).join(', ');
 }
 
-// ─── SETTINGS PANEL HTML ────────────────────────────────────────────────────
+function buildOutfitBlock(f) {
+  return [f.clothing, f.palette, f.accessories].filter(Boolean).join(', ');
+}
 
-function settingsPanelHTML() {
+function buildSceneBlock(f) {
+  return [f.location, f.sceneDetail].filter(Boolean).join(', ');
+}
+
+function buildLightingBlock(f) {
+  return [f.lightStyle, f.lightTemp, f.lightDir].filter(Boolean).join(', ');
+}
+
+function buildPersonalityBlock(f) {
+  return [f.personality, f.niche].filter(Boolean).join(', ');
+}
+
+function assemblePrompt(tokens) {
+  return tokens.filter(Boolean).join(', ');
+}
+
+function buildAllPrompts(f) {
+  const subject = buildSubjectBlock(f);
+  const outfit  = buildOutfitBlock(f);
+  const scene   = buildSceneBlock(f);
+  const lighting = buildLightingBlock(f);
+  const personality = buildPersonalityBlock(f);
+  const ratio   = `aspect ratio ${activePlatform.ratio}, optimised for ${activePlatform.name}`;
+
+  // 1 — Close-Up Portrait
+  const p1 = assemblePrompt([
+    HIDDEN_TOKENS,
+    `${f.cameraBody}, 85mm portrait prime lens, ${f.aperture}`,
+    subject,
+    `${f.expression}, ${f.gaze}`,
+    outfit,
+    f.pose, f.hands, f.object,
+    scene, lighting,
+    'shallow depth of field, face in razor sharp focus, bokeh background',
+    f.colorGrade, f.sharpness,
+    'extreme close-up portrait, tight face crop, head and shoulders only',
+    personality,
+    ANTI_PLASTIC,
+    'ultra-detailed, 8K resolution, hyperrealistic photography, Leonardo AI PhotoReal',
+    ratio,
+  ]);
+
+  // 2 — Three-Quarter Editorial
+  const p2 = assemblePrompt([
+    HIDDEN_TOKENS,
+    `${f.cameraBody}, 50mm standard lens, ${f.aperture}`,
+    subject,
+    `${f.expression}, ${f.gaze}`,
+    outfit,
+    f.pose, f.hands, f.object,
+    scene, lighting,
+    'mid depth of field, face and torso sharp, gentle background separation',
+    f.colorGrade, f.sharpness,
+    'three-quarter editorial shot, chest to head framing, outfit clearly visible',
+    personality,
+    ANTI_PLASTIC,
+    'ultra-detailed, 8K resolution, hyperrealistic photography, Leonardo AI PhotoReal',
+    ratio,
+  ]);
+
+  // 3 — Full Body Cinematic
+  const p3 = assemblePrompt([
+    'full body wide shot, head to toe visible, complete figure',
+    HIDDEN_TOKENS,
+    `${f.cameraBody}, 24mm wide angle lens, f/8.0 deep focus everything sharp`,
+    subject,
+    `${f.expression}, ${f.gaze}`,
+    outfit,
+    `walking through environment, moving through scene, mid-stride across location`,
+    f.hands, f.object,
+    `subject fully visible in sharp foreground, ${scene} stretching behind in midground, sky or ceiling softly visible in background`,
+    lighting,
+    'deep depth of field, full scene sharp, entire figure in frame',
+    f.colorGrade, f.sharpness,
+    personality,
+    ANTI_PLASTIC,
+    'ultra-detailed, 8K resolution, hyperrealistic photography, Leonardo AI PhotoReal',
+    ratio,
+  ]);
+
+  // 4 — Candid Lifestyle
+  const p4 = assemblePrompt([
+    HIDDEN_TOKENS,
+    `${f.cameraBody}, 35mm standard wide lens, f/2.0 moderate depth of field`,
+    subject,
+    `${f.expression}, ${f.gaze}`,
+    outfit,
+    'candid unposed natural moment, spontaneous authentic energy, documentary style',
+    f.pose, f.hands, f.object,
+    scene, lighting,
+    'natural depth separation, mid-range focus, organic handheld feel',
+    f.colorGrade, f.sharpness,
+    'candid lifestyle shot, natural unposed moment in scene',
+    personality,
+    ANTI_PLASTIC,
+    'ultra-detailed, 8K resolution, hyperrealistic photography, Leonardo AI PhotoReal',
+    ratio,
+  ]);
+
+  // 5 — Detail & Mood
+  const detailFeature = outfit || f.eyeDesc || f.lips || 'eyes';
+  const p5 = assemblePrompt([
+    HIDDEN_TOKENS,
+    `${f.cameraBody}, 100mm macro detail lens, f/1.4 shallow depth of field, creamy bokeh`,
+    subject,
+    `${f.expression}, ${f.gaze}`,
+    outfit,
+    f.hands, f.object,
+    scene, lighting,
+    'extreme macro close-up, single feature in sharp focus, razor thin depth of field',
+    f.colorGrade, f.sharpness,
+    'detail and mood shot, extreme close-up of feature, strong colour grade emphasis',
+    personality,
+    ANTI_PLASTIC,
+    'ultra-detailed, 8K resolution, hyperrealistic photography, Leonardo AI PhotoReal',
+    ratio,
+  ]);
+
+  return [p1, p2, p3, p4, p5];
+}
+
+// ─── SETTINGS PANEL ───────────────────────────────────────────────────────────
+
+function settingsPanelHTML(cardIndex) {
+  const s = CARD_SETTINGS[cardIndex];
+  const modelCell = s.tooltip
+    ? `<div class="tooltip-wrap"><span>${s.model}</span><span class="tooltip-icon">i</span><div class="tooltip-box">${s.tooltip}</div></div>`
+    : s.model;
   return `
     <div class="settings-panel">
       <div class="settings-panel-header">Leonardo AI Settings</div>
       <div class="settings-grid">
-        <div class="setting-item">
-          <div class="setting-key">Model</div>
-          <div class="setting-val">Lucid Realism</div>
-        </div>
-        <div class="setting-item">
-          <div class="setting-key">Preset</div>
-          <div class="setting-val">Portrait Perfect</div>
-        </div>
-        <div class="setting-item">
-          <div class="setting-key">PhotoReal</div>
-          <div class="setting-val on">ON</div>
-        </div>
-        <div class="setting-item">
-          <div class="setting-key">Guidance Scale</div>
-          <div class="setting-val">7</div>
-        </div>
-        <div class="setting-item">
-          <div class="setting-key">Aspect Ratio</div>
-          <div class="setting-val ratio-val">${activePlatform.ratio} (${activePlatform.name})</div>
-        </div>
+        <div class="setting-item"><div class="setting-key">Model</div><div class="setting-val">${modelCell}</div></div>
+        <div class="setting-item"><div class="setting-key">Preset</div><div class="setting-val">${s.preset}</div></div>
+        <div class="setting-item"><div class="setting-key">PhotoReal</div><div class="setting-val on">ON</div></div>
+        <div class="setting-item"><div class="setting-key">Guidance Scale</div><div class="setting-val">${s.guidance}</div></div>
+        <div class="setting-item"><div class="setting-key">Aspect Ratio</div><div class="setting-val ratio-val">${activePlatform.ratio} (${activePlatform.name})</div></div>
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
-// ─── MAIN GENERATOR ─────────────────────────────────────────────────────────
+// ─── MAIN GENERATOR ───────────────────────────────────────────────────────────
+
+const PROMPT_DEFS = [
+  { number: 'Prompt 1', tag: 'Close-Up Portrait' },
+  { number: 'Prompt 2', tag: 'Three-Quarter Editorial' },
+  { number: 'Prompt 3', tag: 'Full Body Cinematic' },
+  { number: 'Prompt 4', tag: 'Candid Lifestyle' },
+  { number: 'Prompt 5', tag: 'Detail & Mood' },
+];
 
 let promptTexts = [];
 
 function generatePrompts() {
-  // Basic details
-  const age   = document.getElementById('age').value;
-  const skin  = document.getElementById('skin').value;
-  const hair  = document.getElementById('hair').value.trim();
-  const style = document.getElementById('style').value;
-  const bgKey = document.getElementById('bg').value;
-  const mood  = document.getElementById('mood').value;
+  const f = readAllFields();
+  window._lastFields = f;
 
-  // Face details
-  const eyeLeft  = document.getElementById('eye-left').value;
-  const eyeRight = document.getElementById('eye-right').value;
-  let eyeDesc = '';
-  if (eyeRight === 'same') {
-    eyeDesc = eyeLeft;
-  } else {
-    eyeDesc = `heterochromia, left eye ${eyeLeft.replace(' eyes','')} eye, right eye ${eyeRight} eye`;
-  }
-  const faceShape = document.getElementById('face-shape').value;
-  const features  = getCheckedValues('features-group');
-
-  // Style & outfit
-  const outfit      = document.getElementById('outfit').value;
-  const makeup      = document.getElementById('makeup').value;
-  const accessories = getCheckedValues('acc-group');
-
-  // Mood & emotion
-  const expression  = document.getElementById('expression').value;
-  const energy      = document.getElementById('energy').value;
-  const extraDetail = document.getElementById('extra-detail').value.trim();
-
-  const extras = { eyeDesc, faceShape, features, outfit, makeup, accessories, expression, energy, extraDetail };
-
-  const defs = [
-    { id: 'closeup',       number: 'Prompt 1', tag: 'Close-Up Portrait' },
-    { id: 'threequarter',  number: 'Prompt 2', tag: 'Editorial Three-Quarter' },
-    { id: 'environmental', number: 'Prompt 3', tag: 'Lifestyle Editorial' }
-  ];
-
-  promptTexts = defs.map(d => buildPrompt(d.id, age, skin, hair, style, bgKey, mood, extras));
-
-  // Store subject-only info for card 3 simpler version fallback
-  window._simpleSubject = { age, skin, hair, style };
+  promptTexts = buildAllPrompts(f);
 
   const container = document.getElementById('promptCards');
   container.innerHTML = '';
 
-  defs.forEach((d, i) => {
-    const isLifestyleCard = (i === 2);
+  PROMPT_DEFS.forEach((d, i) => {
+    const isFullBody = (i === 2);
     const card = document.createElement('div');
     card.className = 'prompt-card';
     card.innerHTML = `
@@ -1411,59 +1229,43 @@ function generatePrompts() {
       </div>
       <div class="card-body">
         <div class="prompt-text" id="ptext-${i}">${promptTexts[i]}</div>
-
         <div class="negative-prompt-block">
           <div class="negative-label">✕ Negative Prompt</div>
           <div class="negative-text">${NEGATIVE}</div>
         </div>
-
-        ${settingsPanelHTML()}
-
-        ${isLifestyleCard ? `
+        ${settingsPanelHTML(i)}
+        ${isFullBody ? `
         <div class="safety-warning">
           <div class="safety-warning-icon">⚠️</div>
-          <div class="safety-warning-text">Note: Complex scene prompts occasionally trigger safety filters. If generation fails, click <strong>Try Simpler Version</strong> below.</div>
-        </div>
-        ` : ''}
-
+          <div class="safety-warning-text">Complex scene prompts occasionally trigger safety filters. If generation fails, click <strong>Try Simpler Version</strong> below.</div>
+        </div>` : ''}
         <div class="card-actions">
           <button class="btn-copy" onclick="copyPrompt(this,${i})">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
             Copy Prompt
           </button>
-          <button class="btn-upgrade" onclick="upgradePrompt(this,${i})">
-            ✦ Upgrade Prompt
-          </button>
-          ${isLifestyleCard ? `
-          <button class="btn-simpler" onclick="useSimpleVersion(this)">
-            ↓ Try Simpler Version
-          </button>
-          ` : ''}
+          <button class="btn-upgrade" onclick="upgradePrompt(this,${i})">✦ Upgrade</button>
+          ${isFullBody ? `<button class="btn-simpler" onclick="useSimpleVersion(this)">↓ Try Simpler Version</button>` : ''}
         </div>
-      </div>
-    `;
+      </div>`;
     container.appendChild(card);
   });
 
-  document.getElementById('lockCode').textContent = buildLockCode(age, skin, style, bgKey, mood);
-
-  ['output','lockSection','affiliates','gallery'].forEach(id => {
-    document.getElementById(id).style.display = 'block';
-  });
-
+  document.getElementById('lockCode').textContent = encodeCharacter(f);
+  ['output','lockSection','affiliates','gallery'].forEach(id => { document.getElementById(id).style.display = 'block'; });
+  renderSavedChars();
   document.getElementById('output').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// ─── ACTIONS ────────────────────────────────────────────────────────────────
+// ─── CARD ACTIONS ─────────────────────────────────────────────────────────────
 
 function copyPrompt(btn, index) {
-  const text = document.getElementById('ptext-' + index).textContent;
-  navigator.clipboard.writeText(text).then(() => {
+  navigator.clipboard.writeText(document.getElementById('ptext-' + index).textContent).then(() => {
     btn.classList.add('copied');
-    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+    btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
     setTimeout(() => {
       btn.classList.remove('copied');
-      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Prompt`;
+      btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Prompt';
     }, 2000);
   });
 }
@@ -1473,53 +1275,255 @@ function upgradePrompt(btn, index) {
   const el = document.getElementById('ptext-' + index);
   el.textContent = el.textContent + ', ' + UPGRADE_TOKENS;
   btn.classList.add('upgraded');
-  btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Upgraded`;
+  btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Upgraded';
 }
 
 function useSimpleVersion(btn) {
   if (btn.classList.contains('used')) return;
-  const s = window._simpleSubject || {};
-  const age   = s.age   || document.getElementById('age').value;
-  const skin  = s.skin  || document.getElementById('skin').value;
-  const hair  = s.hair  || document.getElementById('hair').value.trim() || 'natural hair';
-  const style = s.style || document.getElementById('style').value;
-
-  const simpleTokens = [
-    "AI-generated editorial photograph, fictional digital persona",
-    `${age} year old ${style}`,
-    skin,
-    hair,
-    "editorial three-quarter composition",
-    "clean gradient background",
-    "professional photography",
-    "studio lighting",
-    "Sony A7III camera, 85mm f/1.4 lens",
-    ...ANTI_PLASTIC,
-    "ultra-detailed",
-    "8K resolution",
-    "hyperrealistic photography",
-    "Leonardo AI PhotoReal",
+  const f = window._lastFields || {};
+  const subject = buildSubjectBlock(f);
+  const simple = [
+    'full body wide shot, head to toe visible',
+    HIDDEN_TOKENS,
+    `${f.cameraBody || 'Sony A7R V'}, 24mm wide angle lens, f/8.0 deep focus`,
+    subject,
+    `${f.expression || 'relaxed natural expression'}, ${f.gaze || 'direct eye contact'}`,
+    buildOutfitBlock(f),
+    'clean gradient background, professional photography, studio lighting',
+    'deep depth of field, full scene sharp',
+    f.colorGrade, f.sharpness,
+    ANTI_PLASTIC,
+    'ultra-detailed, 8K, hyperrealistic photography, Leonardo AI PhotoReal',
     `aspect ratio ${activePlatform.ratio}`,
-    ...HIDDEN_TOKENS
-  ];
-
-  const el = document.getElementById('ptext-2');
-  el.textContent = simpleTokens.join(", ");
+  ].filter(Boolean).join(', ');
+  document.getElementById('ptext-2').textContent = simple;
   btn.classList.add('used');
-  btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Simplified`;
+  btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Simplified';
+}
+
+// ─── CHARACTER LOCK SYSTEM ────────────────────────────────────────────────────
+
+// Ordered field IDs for encoding (dropdowns only — text inputs encoded separately)
+const ENCODE_SELECTS = ['gender','ethnicity','face-shape','eye-shape','eye-left','eye-right','eye-expression','nose','lips','skin-tone','skin-texture','body-type','expression','gaze','light-style','light-temp','light-dir','camera-body','lens','aperture','cam-angle','color-grade','sharpness','niche','clothing','palette','pose','hands','object','location'];
+
+// Checkbox group IDs
+const CB_GROUPS = {
+  marks: { id: 'marks-group', noneId: 'marks-none' },
+  personality: { id: 'personality-group', noneId: null },
+  acc: { id: 'acc-group', noneId: 'acc-none' },
+};
+
+function encodeCharacter(f) {
+  // Encode selects as index values joined
+  const selectVals = ENCODE_SELECTS.map(id => {
+    const el = document.getElementById(id);
+    if (!el) return '0';
+    const opts = [...el.options];
+    const idx = opts.findIndex(o => o.value === el.value);
+    return Math.max(0, idx).toString(36);
+  }).join('');
+
+  // Encode checkboxes as bitmasks
+  const marksBits = getCheckedValues('marks-group').length > 0
+    ? getCheckedValues('marks-group').reduce((acc, v, i) => {
+        const allVals = [...document.querySelectorAll('#marks-group .cb-label:not([id$="-none"]) input')].map(x => x.value);
+        const idx = allVals.indexOf(v);
+        if (idx >= 0) acc |= (1 << idx);
+        return acc;
+      }, 0) : 0;
+  const persVals = [...document.querySelectorAll('#personality-group .cb-label.checked input')].map(x => x.value);
+  const allPers  = [...document.querySelectorAll('#personality-group .cb-label input')].map(x => x.value);
+  const persBits = persVals.reduce((acc, v) => { const i = allPers.indexOf(v); return i >= 0 ? acc | (1 << i) : acc; }, 0);
+  const accVals  = getCheckedValues('acc-group');
+  const allAcc   = [...document.querySelectorAll('#acc-group .cb-label:not([id$="-none"]) input')].map(x => x.value);
+  const accBits  = accVals.reduce((acc, v) => { const i = allAcc.indexOf(v); return i >= 0 ? acc | (1 << i) : acc; }, 0);
+
+  // Platform
+  const platIdx = ['Instagram','TikTok','YouTube'].indexOf(activePlatform.name);
+
+  // Text inputs: base64url encode
+  const enc = s => btoa(unescape(encodeURIComponent((s||'').slice(0,40)))).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
+  const hairC  = enc(val('hair-color'));
+  const hairT_ = enc(val('hair-style'));
+  const sceneD = enc(val('scene-detail'));
+  const ageStr = enc(val('age'));
+
+  // Human-readable prefix
+  const stylePfx = (val('clothing') || val('niche') || 'GEN').slice(0,3).toUpperCase().replace(/[^A-Z]/g,'').padEnd(3,'X');
+  const skinPfx  = (val('skin-tone') || 'MED').slice(11,14).toUpperCase().replace(/[^A-Z]/g,'').padEnd(3,'X');
+
+  const payload = `${selectVals}${marksBits.toString(16).padStart(2,'0')}${persBits.toString(16).padStart(3,'0')}${accBits.toString(16).padStart(2,'0')}${platIdx}`;
+  return `${stylePfx}-${payload}-${skinPfx}.${hairC}.${hairT_}.${sceneD}.${ageStr}`;
+}
+
+function decodeCharacter(code) {
+  try {
+    code = code.trim();
+    const dotParts = code.split('.');
+    const main     = dotParts[0];
+    const hairC    = dotParts[1] || '';
+    const hairT_   = dotParts[2] || '';
+    const sceneD   = dotParts[3] || '';
+    const ageStr   = dotParts[4] || '';
+
+    const dashParts = main.split('-');
+    if (dashParts.length < 3) return null;
+    const payload = dashParts[1];
+
+    const dec = s => { try { return decodeURIComponent(escape(atob(s.replace(/-/g,'+').replace(/_/g,'/')+'=='))); } catch(e) { return ''; } };
+
+    const state = {};
+    let pos = 0;
+    ENCODE_SELECTS.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) { pos++; return; }
+      const idx = parseInt(payload[pos] || '0', 36);
+      const opts = [...el.options];
+      if (opts[idx]) state[id] = opts[idx].value;
+      pos++;
+    });
+
+    const marksBits = parseInt(payload.slice(pos, pos+2), 16) || 0; pos += 2;
+    const persBits  = parseInt(payload.slice(pos, pos+3), 16) || 0; pos += 3;
+    const accBits   = parseInt(payload.slice(pos, pos+2), 16) || 0; pos += 2;
+    const platIdx   = parseInt(payload[pos]) || 0;
+
+    // Decode checkbox bitmasks
+    const marksEls = [...document.querySelectorAll('#marks-group .cb-label:not([id$="-none"]) input')];
+    state._marks = marksEls.filter((_, i) => (marksBits >> i) & 1).map(x => x.value);
+    const persEls = [...document.querySelectorAll('#personality-group .cb-label input')];
+    state._personality = persEls.filter((_, i) => (persBits >> i) & 1).map(x => x.value);
+    const accEls = [...document.querySelectorAll('#acc-group .cb-label:not([id$="-none"]) input')];
+    state._acc = accEls.filter((_, i) => (accBits >> i) & 1).map(x => x.value);
+
+    state['hair-color']   = dec(hairC);
+    state['hair-style']   = dec(hairT_);
+    state['scene-detail'] = dec(sceneD);
+    state['age']          = dec(ageStr);
+    state._platform       = ['Instagram','TikTok','YouTube'][platIdx] || 'Instagram';
+
+    return state;
+  } catch(e) { return null; }
+}
+
+function applyState(state) {
+  if (!state) return;
+  // Dropdowns
+  ENCODE_SELECTS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && state[id] !== undefined) el.value = state[id];
+  });
+  // Text inputs
+  ['hair-color','hair-style','scene-detail','age'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && state[id] !== undefined) el.value = state[id];
+  });
+
+  // Checkboxes helper
+  function applyCheckboxes(groupId, noneId, activeValues) {
+    document.querySelectorAll(`#${groupId} .cb-label`).forEach(lbl => {
+      const v     = lbl.querySelector('input').value;
+      const isNone = lbl.id && lbl.id.endsWith('-none');
+      const on    = isNone ? (activeValues.length === 0) : (activeValues || []).includes(v);
+      lbl.classList.toggle('checked', on);
+      lbl.querySelector('.cb-check').textContent = on ? '\u2713' : '';
+      lbl.querySelector('input').checked = on;
+    });
+  }
+  applyCheckboxes('marks-group', 'marks-none', state._marks || []);
+  applyCheckboxes('personality-group', null, state._personality || []);
+  applyCheckboxes('acc-group', 'acc-none', state._acc || []);
+
+  // Platform
+  const platName = state._platform || 'Instagram';
+  document.querySelectorAll('.btn-platform').forEach(btn => {
+    const isMatch = btn.dataset.platform === platName;
+    btn.classList.toggle('active', isMatch);
+    if (isMatch) activePlatform = { name: platName, ratio: btn.dataset.ratio };
+  });
+
+  // Auto-expand sections that have data
+  const expand = (id) => document.getElementById(id) && document.getElementById(id).classList.add('open');
+  if (state['face-shape'] || state['eye-shape'] || state['eye-expression']) expand('sec-face');
+  if (state['skin-tone']  || (state._marks||[]).length) expand('sec-skin');
+  if (state['hair-color'] || state['hair-style']) expand('sec-hair');
+  if (state['body-type']  || state['expression']) expand('sec-body');
+  if (state['light-temp'] || state['light-dir'])  expand('sec-lighting');
+  if (state['color-grade']) expand('sec-post');
+  if ((state._personality||[]).length || state['niche']) expand('sec-personality');
+  if (state['clothing'] || (state._acc||[]).length) expand('sec-fashion');
+}
+
+// ─── LOAD / SAVE ──────────────────────────────────────────────────────────────
+
+function loadCharacterCode() {
+  const input = document.getElementById('codeLoaderInput');
+  const btn   = document.getElementById('btnLoad');
+  const code  = input.value.trim();
+  if (!code) return;
+  const state = decodeCharacter(code);
+  if (!state) {
+    btn.textContent = '✕ Invalid Code';
+    btn.classList.add('error');
+    setTimeout(() => { btn.textContent = 'Load Character'; btn.classList.remove('error'); }, 2000);
+    return;
+  }
+  applyState(state);
+  btn.textContent = '\u2713 Loaded!';
+  btn.classList.add('success');
+  setTimeout(() => { btn.textContent = 'Load Character'; btn.classList.remove('success'); input.value = ''; }, 2000);
 }
 
 function copyLockCode(btn) {
   const code = document.getElementById('lockCode').textContent;
   navigator.clipboard.writeText(code).then(() => {
     btn.classList.add('copied');
-    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+    btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
     setTimeout(() => {
       btn.classList.remove('copied');
-      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Code`;
+      btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Code';
     }, 2000);
   });
 }
+
+const STORAGE_KEY = 'ai_influencer_v2_chars';
+
+function loadSavedChars() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch(e) { return []; } }
+function saveSavedChars(arr) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); } catch(e) {} }
+
+function saveCurrentCharacter() {
+  const code = document.getElementById('lockCode').textContent;
+  if (!code || code === '—') return;
+  let saved = loadSavedChars().filter(c => c.code !== code);
+  saved.unshift({ code, date: new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' }) });
+  if (saved.length > 5) saved = saved.slice(0, 5);
+  saveSavedChars(saved);
+  renderSavedChars();
+}
+
+function renderSavedChars() {
+  const saved   = loadSavedChars();
+  const section = document.getElementById('savedCharsSection');
+  const grid    = document.getElementById('savedCharsGrid');
+  if (saved.length === 0) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+  grid.innerHTML = saved.map((c, i) => `
+    <div class="saved-char-card" onclick="applySavedChar('${c.code.replace(/'/g,"\\'")}')">
+      <div class="saved-char-title">Character ${i+1}</div>
+      <div class="saved-char-code">${c.code.split('.')[0]}</div>
+      <div class="saved-char-date">${c.date}</div>
+    </div>`).join('');
+}
+
+function applySavedChar(code) {
+  const state = decodeCharacter(code);
+  if (!state) return;
+  applyState(state);
+  document.getElementById('sec-demographics').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Init
+renderSavedChars();
 </script>
 </body>
 </html>
