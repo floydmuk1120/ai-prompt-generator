@@ -206,6 +206,52 @@ select option{background:#1e1e1e}
 
 footer{border-top:1px solid var(--border);padding:22px;text-align:center;color:#444;font-size:12px}
 footer span{color:#666}
+
+/* ── TAB NAVIGATION ── */
+.tab-nav{display:flex;gap:8px;justify-content:center;margin-bottom:28px}
+.tab-btn{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;padding:11px 26px;cursor:pointer;transition:all 0.22s;letter-spacing:0.01em}
+.tab-btn:hover{border-color:rgba(124,58,237,0.4);color:var(--text)}
+.tab-btn.active{background:linear-gradient(135deg,#7c3aed,#9333ea);border-color:transparent;color:#fff;box-shadow:0 4px 20px rgba(124,58,237,0.38)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* ── VIRAL TEMPLATES ── */
+.vt-search-row{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.vt-search{flex:1;min-width:200px;background:var(--surface);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:11px 18px 11px 42px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:14px center}
+.vt-search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.vt-search::placeholder{color:#555}
+.vt-filters{display:flex;gap:7px;flex-wrap:wrap}
+.vt-filter{background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:7px 15px;cursor:pointer;transition:all 0.18s;white-space:nowrap}
+.vt-filter:hover{border-color:rgba(124,58,237,0.4);color:var(--text)}
+.vt-filter.active{background:rgba(124,58,237,0.18);border-color:rgba(124,58,237,0.55);color:var(--accent-light)}
+.vt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:720px){.vt-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.vt-grid{grid-template-columns:1fr}}
+.vt-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px;transition:transform 0.2s,border-color 0.2s,box-shadow 0.2s;position:relative;overflow:hidden}
+.vt-card::before{content:'';position:absolute;inset:0;border-radius:16px;box-shadow:0 0 0 1px rgba(124,58,237,0);transition:box-shadow 0.2s;pointer-events:none}
+.vt-card:hover{transform:translateY(-3px) scale(1.012);border-color:rgba(124,58,237,0.45);box-shadow:0 8px 32px rgba(124,58,237,0.15)}
+.vt-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.vt-card-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text);line-height:1.25;flex:1}
+.vt-badge{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:3px 9px;border-radius:100px;flex-shrink:0;white-space:nowrap}
+.vt-badge.Cinematic{background:rgba(30,58,138,0.45);color:#93c5fd;border:1px solid rgba(59,130,246,0.3)}
+.vt-badge.Luxury{background:rgba(120,83,0,0.35);color:#fbbf24;border:1px solid rgba(234,179,8,0.35)}
+.vt-badge.Aesthetic{background:rgba(131,24,67,0.35);color:#f9a8d4;border:1px solid rgba(236,72,153,0.35)}
+.vt-badge.Editorial{background:rgba(50,50,50,0.6);color:#e2e8f0;border:1px solid rgba(255,255,255,0.15)}
+.vt-badge.Street{background:rgba(120,53,15,0.45);color:#fdba74;border:1px solid rgba(249,115,22,0.35)}
+.vt-badge.Fantasy{background:rgba(76,29,149,0.45);color:#c4b5fd;border:1px solid rgba(139,92,246,0.35)}
+.vt-desc{font-size:12.5px;color:var(--muted);line-height:1.55;flex:1}
+.vt-platforms{display:flex;gap:5px;flex-wrap:wrap}
+.vt-plat{font-size:10px;font-weight:500;color:#666;background:var(--surface2);border:1px solid var(--border);padding:3px 9px;border-radius:100px}
+.btn-use-template{background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(147,51,234,0.15));border:1px solid rgba(124,58,237,0.4);border-radius:9px;color:var(--accent-light);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:9px 16px;cursor:pointer;transition:all 0.2s;text-align:center;width:100%}
+.btn-use-template:hover{background:linear-gradient(135deg,rgba(124,58,237,0.35),rgba(147,51,234,0.28));border-color:var(--accent);color:#fff;box-shadow:0 4px 16px rgba(124,58,237,0.25)}
+.vt-empty{grid-column:1/-1;text-align:center;color:#444;font-size:14px;padding:48px 0;font-style:italic}
+/* Template loaded banner */
+.template-loaded-banner{background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.35);border-radius:12px;padding:14px 18px;margin-bottom:14px;display:none}
+.template-loaded-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--accent-light);margin-bottom:4px}
+.template-loaded-label{font-size:11px;color:var(--muted);margin-bottom:10px}
+.template-base-prompt{font-family:'JetBrains Mono',monospace;font-size:11px;color:#bbb;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;line-height:1.75;word-break:break-word;max-height:120px;overflow-y:auto;margin-bottom:10px}
+.btn-clear-template{background:none;border:1px solid var(--border);border-radius:7px;color:#555;font-size:11px;font-family:'DM Sans',sans-serif;padding:6px 13px;cursor:pointer;transition:all 0.15s}
+.btn-clear-template:hover{border-color:#666;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -216,6 +262,26 @@ footer span{color:#666}
   <p class="subtitle">Professional 3-Layer Prompt Engine — Ultra-Realistic Results in Seconds</p>
 </header>
 <div class="container">
+
+<!-- TAB NAV -->
+<div class="tab-nav">
+  <button class="tab-btn active" id="tab-custom" onclick="switchTab('custom')">⚡ Custom Generator</button>
+  <button class="tab-btn" id="tab-viral" onclick="switchTab('viral')">🔥 Viral Templates</button>
+</div>
+
+<!-- ════════════════════════════════════════
+     TAB 1: CUSTOM GENERATOR
+     ════════════════════════════════════════ -->
+<div class="tab-panel active" id="panel-custom">
+
+<!-- TEMPLATE LOADED BANNER -->
+<div class="template-loaded-banner" id="templateBanner">
+  <div class="template-loaded-name" id="templateBannerName"></div>
+  <div class="template-loaded-label">Base Template — this prompt will blend with your character settings below</div>
+  <div class="template-base-prompt" id="templateBasePrompt"></div>
+  <button class="btn-clear-template" onclick="clearTemplate()">✕ Remove template</button>
+</div>
+
 <!-- PLATFORM TOGGLE -->
 <div class="platform-toggle">
   <button class="btn-platform active" data-platform="Instagram" data-ratio="4:5" onclick="selectPlatform(this)">📸 Instagram <span class="platform-ratio">4:5</span></button>
@@ -880,6 +946,27 @@ footer span{color:#666}
   </div>
 </div>
 
+</div><!-- /panel-custom -->
+
+<!-- ════════════════════════════════════════
+     TAB 2: VIRAL TEMPLATES
+     ════════════════════════════════════════ -->
+<div class="tab-panel" id="panel-viral">
+  <div class="vt-search-row">
+    <input class="vt-search" id="vtSearch" type="text" placeholder="Search templates..." oninput="filterTemplates()" />
+    <div class="vt-filters" id="vtFilters">
+      <button class="vt-filter active" data-cat="All" onclick="setVtFilter(this)">All</button>
+      <button class="vt-filter" data-cat="Cinematic" onclick="setVtFilter(this)">Cinematic</button>
+      <button class="vt-filter" data-cat="Luxury" onclick="setVtFilter(this)">Luxury</button>
+      <button class="vt-filter" data-cat="Aesthetic" onclick="setVtFilter(this)">Aesthetic</button>
+      <button class="vt-filter" data-cat="Editorial" onclick="setVtFilter(this)">Editorial</button>
+      <button class="vt-filter" data-cat="Street" onclick="setVtFilter(this)">Street</button>
+      <button class="vt-filter" data-cat="Fantasy" onclick="setVtFilter(this)">Fantasy</button>
+    </div>
+  </div>
+  <div class="vt-grid" id="vtGrid"></div>
+</div><!-- /panel-viral -->
+
 </div><!-- /container -->
 <footer><span>AI Prompt Generator 2026</span> — Free Forever</footer>
 </div><!-- /page -->
@@ -1524,6 +1611,307 @@ function applySavedChar(code) {
 
 // Init
 renderSavedChars();
+
+// ─── TAB SWITCHING ────────────────────────────────────────────────────────────
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.getElementById('panel-' + tab).classList.add('active');
+}
+
+// ─── VIRAL TEMPLATES DATA ─────────────────────────────────────────────────────
+
+const VT_TEMPLATES = [
+  {
+    name: 'Neo-Noir Car Portrait',
+    category: 'Cinematic',
+    desc: 'Moody night scene in a car with neon rain — highest save rate on TikTok right now',
+    platforms: ['TikTok','Instagram'],
+    prompt: `Hyper-realistic neo-noir portrait, subject seated in car at night, deep blue and magenta neon lighting illuminating interior, rain streaks across car window, subject grips steering wheel with serious shadowed expression, shot through car window, shallow depth of field, high contrast cinematic photography, visible skin texture, natural face, detailed eyes, IMG_9854.CR2, organic film grain, photorealistic, ultra-detailed, no plastic look, no airbrushing`,
+    negative: `cartoon, CGI, artificial smoothing, oversaturated, stock photo look`,
+    formPreset: { 'location': 'car interior', 'light-style': 'rim light with dark background, edge separation glow', 'color-grade': 'cool cinematic blue teal colour grade', 'pose': 'seated candid pose', 'expression': 'serious editorial expression' }
+  },
+  {
+    name: 'Old Money Editorial',
+    category: 'Luxury',
+    desc: 'Timeless luxury aesthetic — neutral outfit, vintage European backdrop, film texture',
+    platforms: ['Instagram','YouTube'],
+    prompt: `Old money style portrait, subject wearing elegant neutral beige outfit, vintage European architectural backdrop, soft natural window light, slight film texture grain, sophisticated composed expression, direct eye contact, 85mm prime lens, shallow depth of field, warm neutral colour grading, tack sharp skin detail, visible pores, natural asymmetry, Kodak Portra 400 film emulation, editorial fashion photography, photorealistic, ultra-detailed`,
+    negative: `plastic skin, neon colours, modern streetwear, artificial lighting, airbrushed`,
+    formPreset: { 'clothing': 'luxury brand designer clothing', 'palette': 'neutral whites and beige colour palette', 'light-style': 'soft natural daylight, diffused ambient light', 'color-grade': 'warm golden editorial colour grade', 'location': 'luxury hotel lobby interior' }
+  },
+  {
+    name: 'Cyberpunk Creator',
+    category: 'Street',
+    desc: 'Neon city aesthetic with magenta and cyan lighting — extremely high engagement',
+    platforms: ['TikTok','Instagram'],
+    prompt: `Cyberpunk portrait, subject in neon-lit urban environment, vibrant magenta and cyan neon lights reflecting off wet surfaces, dark urban backdrop with glowing signs, holographic advertisements, light rain with visible droplets, steam rising from vents, lens flares, moody high contrast lighting, Blade Runner inspired atmosphere, detailed skin texture, sharp eyes, IMG_9854.CR2, cinematic colour grade, photorealistic, 9:16 vertical`,
+    negative: `cartoon, CGI, overly smooth skin, flat lighting, daytime`,
+    formPreset: { 'location': 'urban city street environment', 'light-style': 'mixed ambient street light, urban glow, natural colour temperature', 'color-grade': 'cool cinematic blue teal colour grade', 'clothing': 'minimalist streetwear outfit' }
+  },
+  {
+    name: 'Golden Hour Lifestyle',
+    category: 'Aesthetic',
+    desc: 'Warm outdoor candid energy — the most universally liked aesthetic on Instagram',
+    platforms: ['Instagram','YouTube'],
+    prompt: `Candid lifestyle portrait, subject outdoors during golden hour, warm golden backlight creating rim light halo, long natural shadows, sun-kissed skin glow, relaxed genuine expression, slight movement mid-stride, 35mm standard lens, natural depth of field, warm 5600K colour temperature, visible skin imperfections, natural freckles, organic film grain, documentary style photography, photorealistic, ultra-detailed`,
+    negative: `studio lighting, artificial look, posed expression, plastic skin, heavy makeup`,
+    formPreset: { 'light-style': 'golden hour backlight, warm amber lens flare, sun-kissed glow', 'light-temp': '5600K daylight balanced colour temperature', 'color-grade': 'warm golden editorial colour grade', 'pose': 'walking mid stride dynamic pose', 'location': 'natural outdoor park environment' }
+  },
+  {
+    name: 'Luxury Rooftop CEO',
+    category: 'Luxury',
+    desc: 'Power aesthetic — city view rooftop, business attire, commanding presence',
+    platforms: ['Instagram','LinkedIn'],
+    prompt: `High-end lifestyle portrait, subject on luxury rooftop terrace at sunset, modern city skyline stretching behind, subject wearing sharp tailored business attire, confident powerful pose arms crossed, city lights beginning to glow, warm golden sunset lighting from behind, lens flare, 50mm standard lens, medium depth of field, cinematic warm colour grade, detailed skin texture, sharp eyes with direct gaze, photorealistic, ultra-detailed`,
+    negative: `casual outfit, flat lighting, artificial background, plastic skin`,
+    formPreset: { 'clothing': 'business professional attire', 'location': 'rooftop city view', 'pose': 'arms crossed powerful confident pose', 'light-style': 'golden hour backlight, warm amber lens flare, sun-kissed glow', 'color-grade': 'warm golden editorial colour grade' }
+  },
+  {
+    name: 'Y2K Chrome Aesthetic',
+    category: 'Aesthetic',
+    desc: 'Early 2000s nostalgia — chrome textures, glossy fashion, retro-futuristic energy',
+    platforms: ['TikTok','Instagram'],
+    prompt: `Y2K aesthetic portrait, subject wearing metallic chrome and pink outfit with glossy tech jacket, sparkling digital background elements, chrome lettering effects, holographic iridescent accents, bold early-2000s makeup with glossy lips, vibrant synthetic colours, futuristic but retro atmosphere, sharp editorial photography, visible skin texture, playful confident expression, photorealistic subject against stylized background, ultra-detailed`,
+    negative: `muted colours, minimalist, natural look, no makeup`,
+    formPreset: { 'color-grade': 'vibrant oversaturated colour grade', 'expression': 'gentle half smile', 'clothing': 'high fashion editorial clothing' }
+  },
+  {
+    name: 'Dark Academia Library',
+    category: 'Editorial',
+    desc: 'Intellectual moody aesthetic — vintage library, warm candlelight, scholarly vibe',
+    platforms: ['Instagram','Pinterest'],
+    prompt: `Dark academia portrait, subject standing near floor-to-ceiling bookshelves in vintage library, warm amber candlelight and tungsten lamp lighting, subject wearing wool coat and smart attire, thoughtful introspective expression looking slightly off camera, Rembrandt 45 degree lighting with deep warm shadows, 85mm prime lens, shallow depth of field, vintage warm colour grading, visible skin texture, natural imperfections, book and journal props visible, photorealistic, ultra-detailed`,
+    negative: `bright lighting, modern setting, casual clothing, plastic skin`,
+    formPreset: { 'light-style': 'warm tungsten interior light, intimate amber glow', 'light-dir': '45 degree Rembrandt lighting', 'color-grade': 'warm golden editorial colour grade', 'clothing': 'business professional attire', 'object': 'holding book or journal', 'gaze': 'slightly off camera gaze' }
+  },
+  {
+    name: 'Soft Pastel Dreamy',
+    category: 'Aesthetic',
+    desc: 'Gentle aesthetic portrait — pastel tones, dreamy blur, warm glowing light',
+    platforms: ['Instagram','Pinterest'],
+    prompt: `Soft aesthetic portrait, subject in pastel colour palette environment, dreamy background blur, warm soft glowing backlight, gentle natural expression with slight smile, 85mm lens with extreme shallow depth of field, pastel pink and peach colour grading, soft skin texture with natural imperfections, wispy loose hair, minimal makeup natural look, ethereal gentle atmosphere, photorealistic, ultra-detailed, 4:5 Instagram portrait format`,
+    negative: `harsh lighting, heavy makeup, bold colours, plastic skin, sharp background`,
+    formPreset: { 'color-grade': 'soft pastel muted colour grade', 'light-style': 'soft natural daylight, diffused ambient light', 'expression': 'gentle half smile', 'aperture': 'f/1.2 extreme bokeh, razor thin depth of field' }
+  },
+  {
+    name: 'Street Style Urban',
+    category: 'Street',
+    desc: 'Candid street photography energy — urban environment, natural light, editorial fashion',
+    platforms: ['TikTok','Instagram'],
+    prompt: `Candid street style portrait, subject walking through urban city street, natural mixed ambient daylight, modern minimalist streetwear outfit, dynamic mid-stride pose, slightly looking over shoulder, 35mm wide lens, natural depth of field, documentary street photography style, neutral cool colour grading, visible skin imperfections, natural expression caught mid-motion, city architecture and street details visible behind, photorealistic, ultra-detailed`,
+    negative: `posed expression, studio lighting, plain background, plastic skin`,
+    formPreset: { 'clothing': 'minimalist streetwear outfit', 'location': 'urban city street environment', 'pose': 'walking mid stride dynamic pose', 'gaze': 'looking over shoulder', 'color-grade': 'natural and neutral colour grade', 'lens': '35mm standard wide lens' }
+  },
+  {
+    name: 'Beach Golden Editorial',
+    category: 'Aesthetic',
+    desc: 'Coastal lifestyle aesthetic — sun-kissed skin, ocean backdrop, resort fashion',
+    platforms: ['Instagram','YouTube'],
+    prompt: `Coastal editorial portrait, subject on tropical beach at golden hour, wearing flowing resort fashion in white and neutral tones, warm tropical sunlight creating rim light halo, ocean and horizon visible behind, slight warm breeze effect in hair, relaxed elegant expression, 50mm lens, natural depth of field, warm golden colour grade, sun-kissed visible skin texture with natural imperfections, photorealistic, ultra-detailed`,
+    negative: `cold lighting, urban setting, heavy clothing, plastic skin, airbrushed`,
+    formPreset: { 'clothing': 'swimwear resort outfit', 'palette': 'neutral whites and beige colour palette', 'location': 'beach coastline environment', 'light-style': 'golden hour backlight, warm amber lens flare, sun-kissed glow', 'color-grade': 'warm golden editorial colour grade' }
+  },
+  {
+    name: 'Gym Power Aesthetic',
+    category: 'Editorial',
+    desc: 'High contrast fitness content — gym setting, dramatic lighting, powerful presence',
+    platforms: ['TikTok','Instagram'],
+    prompt: `High contrast fitness portrait, subject in modern gym setting, wearing fitted athletic wear, powerful confident pose with direct eye contact, dramatic studio strobe lighting with strong shadows, gym equipment and mirrors visible behind, high contrast black and white conversion with subtle colour, sharp defined facial features, athletic body type visible, photorealistic skin texture with natural imperfections, ultra-detailed, editorial fitness photography`,
+    negative: `soft lighting, casual setting, unflattering pose, plastic skin`,
+    formPreset: { 'clothing': 'athleisure fitness outfit', 'light-style': 'studio strobe with large octabox softbox, clean catch light', 'light-dir': 'side split lighting, half face lit', 'pose': 'arms crossed powerful confident pose', 'gaze': 'direct eye contact with camera', 'body-type': 'athletic toned body type' }
+  },
+  {
+    name: 'Luxury Car Editorial',
+    category: 'Luxury',
+    desc: 'Premium lifestyle — leaning on luxury vehicle, urban backdrop, aspirational energy',
+    platforms: ['Instagram','TikTok'],
+    prompt: `Luxury lifestyle editorial, subject leaning confidently against black Mercedes or BMW, wearing premium tailored outfit, urban city backdrop at dusk, street lights beginning to glow, warm cinematic colour grade, strong composed expression, 50mm lens, medium depth of field, subtle lens flare from background lights, detailed skin texture, natural asymmetry, photorealistic, ultra-detailed`,
+    negative: `casual outfit, daytime harsh light, plain background, plastic skin`,
+    formPreset: { 'clothing': 'luxury brand designer clothing', 'location': 'urban city street environment', 'pose': 'leaning against wall casual pose', 'color-grade': 'warm golden editorial colour grade', 'expression': 'serious editorial expression' }
+  },
+  {
+    name: 'Split Transformation',
+    category: 'Cinematic',
+    desc: 'Before and after transformation format — highest performing content type in 2025–2026',
+    platforms: ['TikTok','Instagram'],
+    prompt: `Split vertical composition portrait, clean vertical dividing line down the center, left side casual everyday look with relaxed natural clothing and soft natural lighting in neutral colour, right side elevated cinematic look with formal stylish attire and dramatic cinematic lighting in warm saturated colour grade, both sides showing the same subject with identical facial features, 1:1 ratio, tack sharp skin detail on both sides, photorealistic, ultra-detailed`,
+    negative: `inconsistent face, blurry split line, artificial look, plastic skin`,
+    formPreset: { 'color-grade': 'high contrast fashion colour grade', 'sharpness': 'tack sharp ultra detailed, maximum resolution' }
+  },
+  {
+    name: 'Korean Drama Aesthetic',
+    category: 'Aesthetic',
+    desc: 'Soft romantic cinematic — emotional expression, blurred city lights, dreamy atmosphere',
+    platforms: ['Instagram','TikTok'],
+    prompt: `Korean drama style cinematic portrait, subject in soft romantic atmosphere, blurred bokeh city lights background in warm pink and gold tones, soft diffused front lighting, emotional wistful expression looking slightly away, 85mm prime lens with extreme shallow depth of field, warm soft colour grading with slight desaturation, natural skin texture, subtle tears or emotional glistening eyes, flowing hair, elegant simple outfit, photorealistic, ultra-detailed`,
+    negative: `harsh lighting, bold makeup, bright colours, plastic skin, direct camera gaze`,
+    formPreset: { 'light-style': 'soft natural daylight, diffused ambient light', 'color-grade': 'soft pastel muted colour grade', 'aperture': 'f/1.2 extreme bokeh, razor thin depth of field', 'lens': '85mm portrait prime lens', 'gaze': 'slightly off camera gaze', 'expression': 'soft pout expression' }
+  },
+  {
+    name: 'Magazine Cover Fashion',
+    category: 'Editorial',
+    desc: 'High fashion editorial — clean studio, bold styling, magazine-quality composition',
+    platforms: ['Instagram','YouTube'],
+    prompt: `High fashion magazine cover portrait, subject in bold editorial fashion outfit, clean seamless studio backdrop, professional large octabox studio strobe lighting, strong confident direct gaze, editorial makeup and styled hair, 100mm lens, shallow depth of field, neutral clean colour grading, tack sharp skin detail with visible texture, strong jaw and cheekbone definition, photorealistic, ultra-detailed, Vogue or Harper Bazaar editorial style`,
+    negative: `casual styling, outdoor setting, soft lighting, plastic skin, airbrushed`,
+    formPreset: { 'clothing': 'high fashion editorial clothing', 'light-style': 'studio strobe with large octabox softbox, clean catch light', 'color-grade': 'natural and neutral colour grade', 'lens': '100mm macro detail lens', 'gaze': 'direct eye contact with camera', 'sharpness': 'tack sharp ultra detailed, maximum resolution' }
+  },
+  {
+    name: 'Cosy Cafe Creator',
+    category: 'Aesthetic',
+    desc: 'Warm intimate lifestyle content — coffee shop setting, morning energy, approachable vibe',
+    platforms: ['Instagram','Pinterest'],
+    prompt: `Cosy lifestyle portrait, subject seated in warm coffee shop interior, holding ceramic coffee cup with both hands, warm tungsten ambient lighting with soft window side natural fill, morning golden light from windows, casual comfortable outfit, relaxed genuine smile, 50mm lens, natural depth of field, warm orange and brown colour grading, visible skin texture, natural imperfections, coffee shop details and blurred patrons visible behind, photorealistic, ultra-detailed`,
+    negative: `cold lighting, posed expression, formal attire, plastic skin`,
+    formPreset: { 'location': 'coffee shop interior', 'light-style': 'warm tungsten interior light, intimate amber glow', 'object': 'holding coffee cup', 'hands': 'holding coffee cup', 'color-grade': 'warm golden editorial colour grade', 'expression': 'gentle half smile', 'clothing': 'casual everyday outfit' }
+  },
+  {
+    name: 'Rooftop Sunset Portrait',
+    category: 'Cinematic',
+    desc: 'Dramatic skyline backdrop — city at golden hour, cinematic atmosphere, aspirational mood',
+    platforms: ['Instagram','YouTube'],
+    prompt: `Cinematic rooftop portrait, subject standing at edge of rooftop with sprawling city skyline behind, dramatic golden orange and purple sunset sky, warm backlight rim lighting the subject, slight lens flare from setting sun, confident relaxed pose looking toward horizon, 35mm wide lens, deep depth of field with city and sky sharp behind, warm cinematic colour grade, detailed skin texture, natural expression, photorealistic, ultra-detailed`,
+    negative: `daytime flat light, plain background, posed stiff expression, plastic skin`,
+    formPreset: { 'location': 'rooftop city view', 'light-style': 'golden hour backlight, warm amber lens flare, sun-kissed glow', 'color-grade': 'HBO prestige drama colour grade, deep rich tones', 'lens': '35mm standard wide lens', 'aperture': 'f/8.0 deep focus, everything sharp', 'gaze': 'slightly off camera gaze' }
+  },
+  {
+    name: 'Vintage Film Portrait',
+    category: 'Editorial',
+    desc: 'Authentic film photography aesthetic — grain, imperfection, nostalgic warmth',
+    platforms: ['Instagram','Pinterest'],
+    prompt: `Vintage film photography portrait, subject in natural outdoor or café setting, Kodak Portra 400 film emulation with visible grain, slight colour fade and warmth, authentic film halation around highlights, natural imperfect composition with slight tilt, relaxed candid expression, 50mm lens equivalent, natural depth of field, warm faded colour grading, detailed skin texture with freckles and natural marks, natural hair, minimal makeup, analog photography feel, photorealistic, ultra-detailed`,
+    negative: `digital sharp look, clean editing, modern preset, plastic skin, posed expression`,
+    formPreset: { 'color-grade': 'vintage Kodak film colour grade, analog warmth', 'sharpness': 'natural film softness, organic texture', 'expression': 'relaxed neutral expression', 'skin-texture': 'raw natural skin, visible freckles, natural imperfections, no smoothing' }
+  },
+  {
+    name: 'Night City Streetwear',
+    category: 'Street',
+    desc: 'Urban night energy — streetwear fashion, city lights, confident attitude',
+    platforms: ['TikTok','Instagram'],
+    prompt: `Urban night portrait, subject standing on neon-lit city street at night, wearing premium streetwear outfit with layered pieces, mixed ambient streetlight and neon signage glow illuminating face from multiple directions, confident stance with hands in pockets, 35mm lens, natural night depth of field, moody cool colour grading with warm neon accents, detailed skin texture, natural imperfections, city street details and bokeh lights behind, photorealistic, ultra-detailed`,
+    negative: `daytime, plain background, formal attire, plastic skin, artificial studio lighting`,
+    formPreset: { 'clothing': 'minimalist streetwear outfit', 'location': 'urban city street environment', 'light-style': 'mixed ambient street light, urban glow, natural colour temperature', 'color-grade': 'cool cinematic blue teal colour grade', 'hands': 'hands in pockets relaxed', 'pose': 'standing relaxed natural pose' }
+  },
+  {
+    name: 'Minimalist Clean Portrait',
+    category: 'Editorial',
+    desc: 'Timeless clean aesthetic — simple background, natural light, pure focus on the subject',
+    platforms: ['Instagram','LinkedIn','YouTube'],
+    prompt: `Minimalist editorial portrait, subject against clean white or soft grey seamless backdrop, large soft natural window light from left side creating gentle shadow definition, clean minimal makeup and natural styling, direct confident eye contact, 85mm prime lens, shallow depth of field with clean background, neutral natural colour grading, tack sharp skin detail with visible natural texture and imperfections, strong clean composition, photorealistic, ultra-detailed`,
+    negative: `busy background, dramatic lighting, heavy styling, plastic skin, artificial look`,
+    formPreset: { 'light-style': 'soft natural daylight, diffused ambient light', 'light-dir': 'natural window side light', 'color-grade': 'natural and neutral colour grade', 'sharpness': 'tack sharp ultra detailed, maximum resolution', 'lens': '85mm portrait prime lens', 'gaze': 'direct eye contact with camera', 'location': 'high fashion photography studio' }
+  },
+];
+
+// ─── TEMPLATE STATE ───────────────────────────────────────────────────────────
+
+let activeTemplate = null;
+
+function clearTemplate() {
+  activeTemplate = null;
+  document.getElementById('templateBanner').style.display = 'none';
+}
+
+// ─── USE TEMPLATE ─────────────────────────────────────────────────────────────
+
+function useTemplate(idx) {
+  const t = VT_TEMPLATES[idx];
+  activeTemplate = t;
+
+  // Apply form preset values
+  if (t.formPreset) {
+    Object.entries(t.formPreset).forEach(([id, value]) => {
+      const el = document.getElementById(id);
+      if (el) el.value = value;
+    });
+    // Expand relevant sections
+    if (t.formPreset['location'] || t.formPreset['pose']) document.getElementById('sec-action').classList.add('open');
+    if (t.formPreset['clothing'] || t.formPreset['palette']) document.getElementById('sec-fashion').classList.add('open');
+    if (t.formPreset['light-style']) document.getElementById('sec-lighting').classList.add('open');
+    if (t.formPreset['color-grade'] || t.formPreset['sharpness']) document.getElementById('sec-post').classList.add('open');
+  }
+
+  // Show template banner
+  document.getElementById('templateBannerName').textContent = '🎬 ' + t.name;
+  document.getElementById('templateBasePrompt').textContent = t.prompt;
+  document.getElementById('templateBanner').style.display = 'block';
+
+  // Switch to Custom Generator tab
+  switchTab('custom');
+
+  // Scroll to top of form
+  setTimeout(() => {
+    document.getElementById('templateBanner').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 80);
+}
+
+// Override generatePrompts to blend template when active
+const _origGeneratePrompts = generatePrompts;
+window.generatePrompts = function() {
+  _origGeneratePrompts();
+  if (!activeTemplate) return;
+
+  // After generation, blend template into each prompt text
+  setTimeout(() => {
+    for (let i = 0; i < 5; i++) {
+      const el = document.getElementById('ptext-' + i);
+      if (!el) continue;
+      const base = activeTemplate.prompt;
+      el.textContent = base + ', ' + el.textContent;
+    }
+  }, 50);
+};
+
+// ─── RENDER TEMPLATE GRID ─────────────────────────────────────────────────────
+
+let vtActiveFilter = 'All';
+
+function renderTemplateGrid() {
+  const query   = (document.getElementById('vtSearch').value || '').toLowerCase();
+  const grid    = document.getElementById('vtGrid');
+  const filtered = VT_TEMPLATES.filter((t, i) => {
+    const matchCat  = vtActiveFilter === 'All' || t.category === vtActiveFilter;
+    const matchText = !query || t.name.toLowerCase().includes(query) || t.desc.toLowerCase().includes(query);
+    return matchCat && matchText;
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="vt-empty">No templates match your search.</div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map((t, fi) => {
+    const realIdx = VT_TEMPLATES.indexOf(t);
+    const plats   = t.platforms.map(p => `<span class="vt-plat">${p}</span>`).join('');
+    return `
+      <div class="vt-card">
+        <div class="vt-card-top">
+          <div class="vt-card-name">${t.name}</div>
+          <span class="vt-badge ${t.category}">${t.category}</span>
+        </div>
+        <div class="vt-desc">${t.desc}</div>
+        <div class="vt-platforms">${plats}</div>
+        <button class="btn-use-template" onclick="useTemplate(${realIdx})">✦ Use Template</button>
+      </div>`;
+  }).join('');
+}
+
+function filterTemplates() {
+  renderTemplateGrid();
+}
+
+function setVtFilter(btn) {
+  document.querySelectorAll('.vt-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  vtActiveFilter = btn.dataset.cat;
+  renderTemplateGrid();
+}
+
+// Init templates
+renderTemplateGrid();
 </script>
 </body>
 </html>
