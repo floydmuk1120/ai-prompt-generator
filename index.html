@@ -252,6 +252,33 @@ footer span{color:#666}
 .template-base-prompt{font-family:'JetBrains Mono',monospace;font-size:11px;color:#bbb;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;line-height:1.75;word-break:break-word;max-height:120px;overflow-y:auto;margin-bottom:10px}
 .btn-clear-template{background:none;border:1px solid var(--border);border-radius:7px;color:#555;font-size:11px;font-family:'DM Sans',sans-serif;padding:6px 13px;cursor:pointer;transition:all 0.15s}
 .btn-clear-template:hover{border-color:#666;color:var(--muted)}
+/* ── MOOD VARIATIONS PANEL ── */
+#moodPanel{display:none;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:22px 24px;margin-bottom:16px;position:relative;overflow:hidden;animation:fadeUp 0.4s ease both}
+#moodPanel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(124,58,237,0.45),transparent)}
+.mood-panel-header{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:4px}
+.mood-panel-sub{font-size:12px;color:#555;margin-bottom:16px}
+.mood-btns{display:flex;gap:9px;flex-wrap:wrap}
+.btn-mood{display:inline-flex;align-items:center;gap:8px;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;padding:10px 20px;cursor:pointer;border:1px solid transparent;transition:all 0.2s;white-space:nowrap}
+.btn-mood:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.3)}
+.btn-mood.active{box-shadow:0 0 0 2px #fff2,0 6px 24px rgba(0,0,0,0.4)!important;transform:translateY(-2px)}
+.btn-mood-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.btn-mood.mood-dramatic{background:rgba(127,0,0,0.25);border-color:rgba(185,28,28,0.5);color:#fca5a5}
+.btn-mood.mood-dramatic .btn-mood-dot{background:#dc2626}
+.btn-mood.mood-dramatic:hover,.btn-mood.mood-dramatic.active{background:rgba(127,0,0,0.42);border-color:#dc2626}
+.btn-mood.mood-natural{background:rgba(20,83,45,0.25);border-color:rgba(21,128,61,0.5);color:#86efac}
+.btn-mood.mood-natural .btn-mood-dot{background:#16a34a}
+.btn-mood.mood-natural:hover,.btn-mood.mood-natural.active{background:rgba(20,83,45,0.42);border-color:#16a34a}
+.btn-mood.mood-editorial{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.25);color:#f1f5f9}
+.btn-mood.mood-editorial .btn-mood-dot{background:#e2e8f0}
+.btn-mood.mood-editorial:hover,.btn-mood.mood-editorial.active{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.5)}
+.btn-mood.mood-cinematic{background:rgba(23,37,84,0.35);border-color:rgba(29,78,216,0.5);color:#93c5fd}
+.btn-mood.mood-cinematic .btn-mood-dot{background:#2563eb}
+.btn-mood.mood-cinematic:hover,.btn-mood.mood-cinematic.active{background:rgba(23,37,84,0.55);border-color:#2563eb}
+.btn-mood.mood-commercial{background:rgba(120,83,0,0.25);border-color:rgba(202,138,4,0.5);color:#fde047}
+.btn-mood.mood-commercial .btn-mood-dot{background:#ca8a04}
+.btn-mood.mood-commercial:hover,.btn-mood.mood-commercial.active{background:rgba(120,83,0,0.42);border-color:#ca8a04}
+.mood-active-label{margin-top:14px;font-size:11px;color:#555;display:none}
+.mood-active-label span{color:var(--accent-light);font-weight:600}
 </style>
 </head>
 <body>
@@ -296,17 +323,15 @@ footer span{color:#666}
   <button class="btn-load" id="btnLoad" onclick="loadCharacterCode()">Load Character</button>
 </div>
 
-<!-- ══════════════════════════════════════
-     LAYER 1 — PHYSICAL IDENTITY
-     ══════════════════════════════════════ -->
-<div class="layer-label">Layer 1 — Physical Identity</div>
-
-<!-- Demographics -->
+<!-- ══════════════════════════════════
+     SECTION 1 — WHO IS YOUR INFLUENCER
+     ══════════════════════════════════ -->
+<div class="layer-label">Section 1 — Who is your influencer</div>
 <div class="form-section open" id="sec-demographics">
   <button class="section-toggle" onclick="toggleSection('sec-demographics')">
     <div class="section-toggle-left">
       <div class="section-toggle-icon">👤</div>
-      <div><div class="section-toggle-title">Demographics</div><div class="section-toggle-meta">Gender, age, ethnicity</div></div>
+      <div><div class="section-toggle-title">Who is your influencer</div><div class="section-toggle-meta">Gender, age, ethnicity</div></div>
     </div>
     <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
   </button>
@@ -317,67 +342,55 @@ footer span{color:#666}
         <select id="gender">
           <option value="woman">Female</option>
           <option value="man">Male</option>
-          <option value="non-binary person">Non-binary</option>
         </select>
       </div>
       <div class="field">
         <label>Age</label>
-        <input type="text" id="age" placeholder="e.g. early 20s, mid 30s" />
+        <select id="age">
+          <option value="adult, mid 20s to early 30s">Adult</option>
+          <option value="mature, mid 40s to early 50s">Mature</option>
+          <option value="senior, 60s to 70s">Senior</option>
+        </select>
       </div>
       <div class="field field-full">
         <label>Ethnicity</label>
         <select id="ethnicity">
           <option value="">No preference</option>
-          <option value="East Asian">East Asian</option>
-          <option value="South Asian">South Asian</option>
-          <option value="Southeast Asian">Southeast Asian</option>
-          <option value="Middle Eastern">Middle Eastern</option>
           <option value="African">African</option>
-          <option value="West African">West African</option>
-          <option value="East African">East African</option>
+          <option value="Asian">Asian</option>
           <option value="European">European</option>
-          <option value="Latin American">Latin American</option>
-          <option value="Mixed ethnicity">Mixed ethnicity</option>
+          <option value="Indian">Indian</option>
+          <option value="Middle Eastern">Middle Eastern</option>
+          <option value="Mixed ethnicity">Mixed</option>
         </select>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Facial Structure -->
-<div class="form-section" id="sec-face">
-  <button class="section-toggle" onclick="toggleSection('sec-face')">
+<!-- ══════════════════════════════════
+     SECTION 2 — HOW DO THEY LOOK
+     ══════════════════════════════════ -->
+<div class="layer-label" style="margin-top:14px">Section 2 — How do they look</div>
+<div class="form-section open" id="sec-look">
+  <button class="section-toggle" onclick="toggleSection('sec-look')">
     <div class="section-toggle-left">
-      <div class="section-toggle-icon">👁</div>
-      <div><div class="section-toggle-title">Facial Structure</div><div class="section-toggle-meta">Face shape, eyes, nose, lips</div></div>
+      <div class="section-toggle-icon">✨</div>
+      <div><div class="section-toggle-title">How do they look</div><div class="section-toggle-meta">Skin, eyes, hair, body</div></div>
     </div>
     <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
   </button>
   <div class="section-body">
     <div class="form-grid">
-      <div class="field">
-        <label>Face Shape</label>
-        <select id="face-shape">
-          <option value="">No preference</option>
-          <option value="oval face shape">Oval</option>
-          <option value="round face shape">Round</option>
-          <option value="square face shape">Square</option>
-          <option value="heart-shaped face">Heart</option>
-          <option value="diamond face shape">Diamond</option>
-          <option value="elongated face shape">Elongated</option>
-          <option value="tapered chin face shape">Tapered chin</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Eye Shape</label>
-        <select id="eye-shape">
-          <option value="">No preference</option>
-          <option value="almond-shaped eyes">Almond</option>
-          <option value="round eyes">Round</option>
-          <option value="hooded eyes">Hooded</option>
-          <option value="monolid eyes">Monolid</option>
-          <option value="upturned eyes">Upturned</option>
-          <option value="downturned eyes">Downturned</option>
+      <div class="field field-full">
+        <label>Skin Tone</label>
+        <select id="skin-tone">
+          <option value="Fitzpatrick Type I, very fair pale skin, cool undertones, porcelain complexion">Fitzpatrick I — Very fair / Porcelain</option>
+          <option value="Fitzpatrick Type II, fair skin with pink undertones, light complexion">Fitzpatrick II — Fair with pink undertones</option>
+          <option value="Fitzpatrick Type III, light beige skin, neutral undertones">Fitzpatrick III — Light beige</option>
+          <option value="Fitzpatrick Type IV, olive medium skin, warm golden undertones">Fitzpatrick IV — Olive / Medium</option>
+          <option value="Fitzpatrick Type V, medium brown skin, warm rich undertones">Fitzpatrick V — Medium brown</option>
+          <option value="Fitzpatrick Type VI, deep brown skin, deep rich undertones">Fitzpatrick VI — Deep brown</option>
         </select>
       </div>
       <div class="field">
@@ -405,383 +418,53 @@ footer span{color:#666}
           <option value="amber">Amber</option>
         </select>
       </div>
-      <div class="field">
-        <label>Eye Expression</label>
-        <select id="eye-expression">
-          <option value="">No preference</option>
-          <option value="soft warm inviting gaze">Soft and warm</option>
-          <option value="intense direct powerful gaze">Intense and direct</option>
-          <option value="playful mischievous gaze">Playful</option>
-          <option value="dreamy distant gaze">Dreamy</option>
-          <option value="fierce editorial gaze">Fierce</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Nose Type</label>
-        <select id="nose">
-          <option value="">No preference</option>
-          <option value="straight nose">Straight</option>
-          <option value="button nose">Button</option>
-          <option value="refined delicate nose">Refined</option>
-          <option value="broad nose">Broad</option>
-          <option value="upturned nose">Upturned</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Lips</label>
-        <select id="lips">
-          <option value="">No preference</option>
-          <option value="full lips">Full</option>
-          <option value="thin lips">Thin</option>
-          <option value="cupid's bow lips">Cupid's bow</option>
-          <option value="wide lips">Wide</option>
-          <option value="pouty lips">Pouty</option>
-        </select>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Skin -->
-<div class="form-section" id="sec-skin">
-  <button class="section-toggle" onclick="toggleSection('sec-skin')">
-    <div class="section-toggle-left">
-      <div class="section-toggle-icon">✨</div>
-      <div><div class="section-toggle-title">Skin</div><div class="section-toggle-meta">Tone, texture, marks</div></div>
-    </div>
-    <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
-  </button>
-  <div class="section-body">
-    <div class="form-grid">
-      <div class="field field-full">
-        <label>Skin Tone</label>
-        <select id="skin-tone">
-          <option value="Fitzpatrick Type I, very fair pale skin, cool undertones, porcelain complexion">Fitzpatrick I — Very fair / Porcelain</option>
-          <option value="Fitzpatrick Type II, fair skin with pink undertones, light complexion">Fitzpatrick II — Fair with pink undertones</option>
-          <option value="Fitzpatrick Type III, light beige skin, neutral undertones">Fitzpatrick III — Light beige</option>
-          <option value="Fitzpatrick Type IV, olive medium skin, warm golden undertones">Fitzpatrick IV — Olive / Medium</option>
-          <option value="Fitzpatrick Type V, medium brown skin, warm rich undertones">Fitzpatrick V — Medium brown</option>
-          <option value="Fitzpatrick Type VI, deep brown skin, deep rich undertones">Fitzpatrick VI — Deep brown</option>
-        </select>
-      </div>
-      <div class="field field-full">
-        <label>Skin Texture Realism</label>
-        <select id="skin-texture">
-          <option value="clean smooth even skin">Clean and smooth</option>
-          <option value="visible pores natural skin texture">Visible pores</option>
-          <option value="micro-detail skin texture, subtle surface variation, natural imperfections">Micro-detail with subtle texture</option>
-          <option value="raw natural skin, visible freckles, natural imperfections, no smoothing">Raw natural with freckles and imperfections</option>
-        </select>
-      </div>
-      <div class="field field-full">
-        <label>Distinguishing Marks</label>
-        <div class="checkbox-group" id="marks-group">
-          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="natural freckles across face"><span class="cb-check"></span>Natural freckles</label>
-          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="small beauty mark on face"><span class="cb-check"></span>Beauty mark</label>
-          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="subtle acne scars on skin"><span class="cb-check"></span>Subtle acne scars</label>
-          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="faint natural laugh lines"><span class="cb-check"></span>Faint laugh lines</label>
-          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="mole near lip"><span class="cb-check"></span>Mole near lip</label>
-          <label class="cb-label checked" id="marks-none" onclick="toggleNone('marks-none','marks-group',event)"><input type="checkbox" value="" checked><span class="cb-check">✓</span>None</label>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Hair -->
-<div class="form-section" id="sec-hair">
-  <button class="section-toggle" onclick="toggleSection('sec-hair')">
-    <div class="section-toggle-left">
-      <div class="section-toggle-icon">💇</div>
-      <div><div class="section-toggle-title">Hair</div><div class="section-toggle-meta">Colour, texture, style</div></div>
-    </div>
-    <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
-  </button>
-  <div class="section-body">
-    <div class="form-grid">
       <div class="field field-full">
         <label>Hair Colour</label>
-        <input type="text" id="hair-color" placeholder="e.g. platinum blonde with ash roots, jet black, warm auburn" />
+        <input type="text" id="hair-color" placeholder="e.g. platinum blonde, jet black, warm auburn" />
       </div>
       <div class="field">
-        <label>Hair Texture</label>
+        <label>Hairstyle</label>
         <select id="hair-texture">
-          <option value="">No preference</option>
-          <option value="fine straight hair">Fine and straight</option>
-          <option value="medium wavy hair">Medium wavy</option>
-          <option value="thick curly hair">Thick and curly</option>
-          <option value="coily natural hair">Coily and natural</option>
-          <option value="fine wispy hair">Fine and wispy</option>
+          <option value="bald, shaved head">Bald</option>
+          <option value="short hair">Short Hair</option>
+          <option value="long flowing hair">Long Hair</option>
+          <option value="afro natural hair">Afro</option>
+          <option value="punk style hair, bold unconventional cut">Punk</option>
+          <option value="dreadlocks">Dreadlocks</option>
+          <option value="spiky textured hair">Spiky</option>
         </select>
       </div>
-      <div class="field">
-        <label>Hair Style</label>
-        <input type="text" id="hair-style" placeholder="e.g. high messy bun, shoulder length loose waves" />
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Body -->
-<div class="form-section" id="sec-body">
-  <button class="section-toggle" onclick="toggleSection('sec-body')">
-    <div class="section-toggle-left">
-      <div class="section-toggle-icon">🧍</div>
-      <div><div class="section-toggle-title">Body & Expression</div><div class="section-toggle-meta">Body type, expression, gaze</div></div>
-    </div>
-    <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
-  </button>
-  <div class="section-body">
-    <div class="form-grid">
       <div class="field">
         <label>Body Type</label>
         <select id="body-type">
-          <option value="">No preference</option>
-          <option value="slim lean body type">Slim and lean</option>
-          <option value="athletic toned body type">Athletic and toned</option>
+          <option value="slim lean body type">Slim</option>
+          <option value="athletic toned body type">Athletic</option>
+          <option value="muscular strong body type">Muscular</option>
           <option value="curvy body type">Curvy</option>
-          <option value="petite body type">Petite</option>
-          <option value="plus size body type">Plus size</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Facial Expression</label>
-        <select id="expression">
-          <option value="gentle half smile">Gentle half smile</option>
-          <option value="relaxed neutral expression">Relaxed neutral</option>
-          <option value="full genuine laugh">Full genuine laugh</option>
-          <option value="serious editorial expression">Serious editorial</option>
-          <option value="soft pout expression">Soft pout</option>
-          <option value="surprised expression">Surprised</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Gaze Direction</label>
-        <select id="gaze">
-          <option value="direct eye contact with camera">Direct eye contact</option>
-          <option value="slightly off camera gaze">Slightly off camera</option>
-          <option value="looking down thoughtfully">Looking down</option>
-          <option value="looking over shoulder">Over shoulder</option>
-          <option value="eyes closed serene">Eyes closed</option>
+          <option value="heavy set body type">Heavy</option>
+          <option value="skinny slender body type">Skinny</option>
         </select>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     LAYER 2 — PHOTOGRAPHY
-     ══════════════════════════════════════ -->
-<div class="layer-label" style="margin-top:22px">Layer 2 — Photography</div>
-
-<!-- Lighting -->
-<div class="form-section open" id="sec-lighting">
-  <button class="section-toggle" onclick="toggleSection('sec-lighting')">
-    <div class="section-toggle-left">
-      <div class="section-toggle-icon">💡</div>
-      <div><div class="section-toggle-title">Lighting</div><div class="section-toggle-meta">Style, temperature, direction</div></div>
-    </div>
-    <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
-  </button>
-  <div class="section-body">
-    <div class="form-grid">
-      <div class="field">
-        <label>Lighting Style</label>
-        <select id="light-style">
-          <option value="soft natural daylight, diffused ambient light">Soft natural daylight</option>
-          <option value="golden hour backlight, warm amber lens flare, sun-kissed glow">Golden hour backlight</option>
-          <option value="studio strobe with large octabox softbox, clean catch light">Studio strobe with octabox</option>
-          <option value="dramatic chiaroscuro, deep shadows, high contrast light">Dramatic chiaroscuro</option>
-          <option value="rim light with dark background, edge separation glow">Rim light with dark background</option>
-          <option value="mixed ambient street light, urban glow, natural colour temperature">Mixed ambient street light</option>
-          <option value="warm tungsten interior light, intimate amber glow">Warm tungsten interior</option>
-          <option value="blue hour twilight, cool ambient dusk light">Blue hour twilight</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Light Temperature</label>
-        <select id="light-temp">
-          <option value="">No preference</option>
-          <option value="3200K warm tungsten colour temperature">3200K warm tungsten</option>
-          <option value="4500K neutral morning colour temperature">4500K neutral morning</option>
-          <option value="5600K daylight balanced colour temperature">5600K daylight balanced</option>
-          <option value="6500K cool overcast colour temperature">6500K cool overcast</option>
-          <option value="mixed colour temperature, variable light sources">Mixed temperature</option>
-        </select>
-      </div>
-      <div class="field field-full">
-        <label>Light Direction</label>
-        <select id="light-dir">
-          <option value="">No preference</option>
-          <option value="front facing flat lighting">Front facing flat</option>
-          <option value="45 degree Rembrandt lighting">45 degree Rembrandt</option>
-          <option value="side split lighting, half face lit">Side split lighting</option>
-          <option value="rim backlight only, silhouette separation">Rim / backlight only</option>
-          <option value="butterfly under nose lighting">Butterfly under nose</option>
-          <option value="natural window side light">Natural window side</option>
-        </select>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Camera -->
-<div class="form-section open" id="sec-camera">
-  <button class="section-toggle" onclick="toggleSection('sec-camera')">
-    <div class="section-toggle-left">
-      <div class="section-toggle-icon">📷</div>
-      <div><div class="section-toggle-title">Camera</div><div class="section-toggle-meta">Body, lens, aperture, angle</div></div>
-    </div>
-    <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
-  </button>
-  <div class="section-body">
-    <div class="form-grid">
-      <div class="field">
-        <label>Camera Body</label>
-        <select id="camera-body">
-          <option value="Sony A7R V">Sony A7R V</option>
-          <option value="Canon EOS R5">Canon EOS R5</option>
-          <option value="Hasselblad H6D 100c">Hasselblad H6D 100c</option>
-          <option value="Leica SL2">Leica SL2</option>
-          <option value="Phase One XF IQ4">Phase One XF IQ4</option>
-          <option value="ARRI Alexa LF cinematic camera">ARRI Alexa LF — cinematic</option>
-          <option value="RED V-RAPTOR 8K cinema camera">RED V-RAPTOR 8K</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Lens Focal Length</label>
-        <select id="lens">
-          <option value="24mm wide angle lens">24mm wide angle</option>
-          <option value="35mm standard wide lens">35mm standard wide</option>
-          <option value="50mm standard lens">50mm standard</option>
-          <option value="85mm portrait prime lens">85mm portrait prime</option>
-          <option value="100mm macro detail lens">100mm macro detail</option>
-          <option value="135mm compressed portrait lens">135mm compressed portrait</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Aperture</label>
-        <select id="aperture">
-          <option value="f/1.2 extreme bokeh, razor thin depth of field">f/1.2 extreme bokeh</option>
-          <option value="f/1.4 shallow depth of field, creamy bokeh">f/1.4 shallow</option>
-          <option value="f/2.0 moderate depth of field">f/2.0 moderate</option>
-          <option value="f/4.0 medium depth of field">f/4.0 medium</option>
-          <option value="f/8.0 deep focus, everything sharp">f/8.0 deep focus everything sharp</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Camera Angle</label>
-        <select id="cam-angle">
-          <option value="eye level straight on">Eye level straight on</option>
-          <option value="10 degrees above eye level">10 degrees above</option>
-          <option value="low angle looking up at subject">Low angle looking up</option>
-          <option value="slight dutch tilt angle">Dutch tilt slight</option>
-          <option value="bird's eye overhead angle">Bird's eye</option>
-        </select>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Post Processing -->
-<div class="form-section" id="sec-post">
-  <button class="section-toggle" onclick="toggleSection('sec-post')">
-    <div class="section-toggle-left">
-      <div class="section-toggle-icon">🎨</div>
-      <div><div class="section-toggle-title">Post Processing</div><div class="section-toggle-meta">Colour grade, sharpness</div></div>
-    </div>
-    <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
-  </button>
-  <div class="section-body">
-    <div class="form-grid">
-      <div class="field">
-        <label>Colour Grading</label>
-        <select id="color-grade">
-          <option value="natural and neutral colour grade">Natural and neutral</option>
-          <option value="warm golden editorial colour grade">Warm golden editorial</option>
-          <option value="cool cinematic blue teal colour grade">Cool cinematic blue teal</option>
-          <option value="vintage Kodak film colour grade, analog warmth">Vintage Kodak film</option>
-          <option value="high contrast fashion colour grade">High contrast fashion</option>
-          <option value="soft pastel muted colour grade">Soft pastel muted</option>
-          <option value="vibrant oversaturated colour grade">Vibrant oversaturated</option>
-          <option value="Netflix documentary grade, clean neutral">Netflix documentary grade</option>
-          <option value="HBO prestige drama colour grade, deep rich tones">HBO prestige drama</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Sharpness</label>
-        <select id="sharpness">
-          <option value="tack sharp ultra detailed, maximum resolution">Tack sharp ultra detailed</option>
-          <option value="natural film softness, organic texture">Natural film softness</option>
-          <option value="slightly soft dreamy quality">Slightly soft dreamy</option>
-        </select>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════
-     LAYER 3 — PERSONALITY & CONTEXT
-     ══════════════════════════════════════ -->
-<div class="layer-label" style="margin-top:22px">Layer 3 — Personality &amp; Context</div>
-
-<!-- Personality -->
-<div class="form-section" id="sec-personality">
-  <button class="section-toggle" onclick="toggleSection('sec-personality')">
-    <div class="section-toggle-left">
-      <div class="section-toggle-icon">⚡</div>
-      <div><div class="section-toggle-title">Personality</div><div class="section-toggle-meta">Keywords, content niche</div></div>
-    </div>
-    <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
-  </button>
-  <div class="section-body">
-    <div class="form-grid">
-      <div class="field field-full">
-        <label>Personality Keywords</label>
-        <div class="checkbox-group" id="personality-group">
-          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="confident"><span class="cb-check"></span>Confident</label>
-          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="warm and approachable"><span class="cb-check"></span>Warm</label>
-          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="mysterious"><span class="cb-check"></span>Mysterious</label>
-          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="playful"><span class="cb-check"></span>Playful</label>
-          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="sophisticated"><span class="cb-check"></span>Sophisticated</label>
-          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="aspirational"><span class="cb-check"></span>Aspirational</label>
-          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="relatable"><span class="cb-check"></span>Relatable</label>
-          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="bold"><span class="cb-check"></span>Bold</label>
-          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="ironic"><span class="cb-check"></span>Ironic</label>
-        </div>
-      </div>
-      <div class="field field-full">
-        <label>Content Niche</label>
-        <select id="niche">
-          <option value="">No preference</option>
-          <option value="luxury lifestyle content creator">Luxury lifestyle</option>
-          <option value="fitness and wellness content creator">Fitness and wellness</option>
-          <option value="high fashion editorial content creator">High fashion editorial</option>
-          <option value="street style content creator">Street style</option>
-          <option value="travel and adventure content creator">Travel and adventure</option>
-          <option value="business and finance content creator">Business and finance</option>
-          <option value="beauty and cosmetics content creator">Beauty and cosmetics</option>
-          <option value="food and hospitality content creator">Food and hospitality</option>
-          <option value="tech and gaming content creator">Tech and gaming</option>
-        </select>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Fashion -->
+<!-- ══════════════════════════════════
+     SECTION 3 — THEIR STYLE
+     ══════════════════════════════════ -->
+<div class="layer-label" style="margin-top:14px">Section 3 — Their style</div>
 <div class="form-section open" id="sec-fashion">
   <button class="section-toggle" onclick="toggleSection('sec-fashion')">
     <div class="section-toggle-left">
       <div class="section-toggle-icon">👗</div>
-      <div><div class="section-toggle-title">Fashion</div><div class="section-toggle-meta">Clothing, palette, accessories</div></div>
+      <div><div class="section-toggle-title">Their style</div><div class="section-toggle-meta">Outfit, colour, accessories</div></div>
     </div>
     <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
   </button>
   <div class="section-body">
     <div class="form-grid">
       <div class="field">
-        <label>Clothing Style</label>
+        <label>Outfit Style</label>
         <select id="clothing">
           <option value="">No preference</option>
           <option value="minimalist streetwear outfit">Minimalist streetwear</option>
@@ -796,7 +479,7 @@ footer span{color:#666}
         </select>
       </div>
       <div class="field">
-        <label>Colour Palette</label>
+        <label>Clothing Colour</label>
         <select id="palette">
           <option value="">No preference</option>
           <option value="neutral whites and beige colour palette">Neutral whites and beige</option>
@@ -825,53 +508,22 @@ footer span{color:#666}
   </div>
 </div>
 
-<!-- Action & Environment -->
-<div class="form-section open" id="sec-action">
-  <button class="section-toggle" onclick="toggleSection('sec-action')">
+<!-- ══════════════════════════════════
+     SECTION 4 — THE SCENE
+     ══════════════════════════════════ -->
+<div class="layer-label" style="margin-top:14px">Section 4 — The scene</div>
+<div class="form-section open" id="sec-scene">
+  <button class="section-toggle" onclick="toggleSection('sec-scene')">
     <div class="section-toggle-left">
       <div class="section-toggle-icon">🌆</div>
-      <div><div class="section-toggle-title">Action &amp; Environment</div><div class="section-toggle-meta">Pose, scene, location</div></div>
+      <div><div class="section-toggle-title">The scene</div><div class="section-toggle-meta">Location, lighting, camera, mood</div></div>
     </div>
     <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
   </button>
   <div class="section-body">
     <div class="form-grid">
-      <div class="field">
-        <label>Body Pose</label>
-        <select id="pose">
-          <option value="standing relaxed natural pose">Standing relaxed</option>
-          <option value="seated candid pose">Seated candid</option>
-          <option value="walking mid stride dynamic pose">Walking mid stride</option>
-          <option value="leaning against wall casual pose">Leaning against wall</option>
-          <option value="sitting in car editorial pose">Sitting in car</option>
-          <option value="looking over shoulder pose">Looking over shoulder</option>
-          <option value="arms crossed powerful confident pose">Arms crossed powerful</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Hand Position</label>
-        <select id="hands">
-          <option value="">Natural at sides</option>
-          <option value="hand touching hair gently">Touching hair gently</option>
-          <option value="holding coffee cup">Holding coffee cup</option>
-          <option value="holding phone">Holding phone</option>
-          <option value="one hand on chin thoughtful">One hand on chin</option>
-          <option value="hands in pockets relaxed">Hands in pockets</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Object Held</label>
-        <select id="object">
-          <option value="">Nothing</option>
-          <option value="holding clear smartphone">Clear smartphone</option>
-          <option value="holding coffee cup">Coffee cup</option>
-          <option value="holding sunglasses in hand">Sunglasses in hand</option>
-          <option value="holding shopping bags">Shopping bags</option>
-          <option value="holding book or journal">Book or journal</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Scene Location</label>
+      <div class="field field-full">
+        <label>Location</label>
         <select id="location">
           <option value="modern minimalist apartment interior">Modern minimalist apartment</option>
           <option value="luxury hotel lobby interior">Luxury hotel lobby</option>
@@ -884,9 +536,92 @@ footer span{color:#666}
           <option value="car interior">Car interior</option>
         </select>
       </div>
+      <div class="field">
+        <label>Lighting</label>
+        <select id="light-style">
+          <option value="soft natural daylight, diffused ambient light">Soft natural daylight</option>
+          <option value="golden hour backlight, warm amber lens flare, sun-kissed glow">Golden hour backlight</option>
+          <option value="studio strobe with large octabox softbox, clean catch light">Studio strobe</option>
+          <option value="dramatic chiaroscuro, deep shadows, high contrast light">Dramatic chiaroscuro</option>
+          <option value="rim light with dark background, edge separation glow">Rim light / dark bg</option>
+          <option value="mixed ambient street light, urban glow, natural colour temperature">Urban street light</option>
+          <option value="warm tungsten interior light, intimate amber glow">Warm tungsten interior</option>
+          <option value="blue hour twilight, cool ambient dusk light">Blue hour twilight</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Camera Angle</label>
+        <select id="cam-angle">
+          <option value="eye level straight on">Eye level</option>
+          <option value="10 degrees above eye level">Slightly above</option>
+          <option value="low angle looking up at subject">Low angle looking up</option>
+          <option value="slight dutch tilt angle">Dutch tilt</option>
+          <option value="bird's eye overhead angle">Bird's eye</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Mood</label>
+        <select id="color-grade">
+          <option value="natural and neutral colour grade">Natural</option>
+          <option value="warm golden editorial colour grade">Warm golden</option>
+          <option value="cool cinematic blue teal colour grade">Cool cinematic</option>
+          <option value="vintage Kodak film colour grade, analog warmth">Vintage film</option>
+          <option value="high contrast fashion colour grade">High contrast</option>
+          <option value="soft pastel muted colour grade">Soft pastel</option>
+          <option value="vibrant oversaturated colour grade">Vibrant</option>
+          <option value="Netflix documentary grade, clean neutral">Documentary</option>
+          <option value="HBO prestige drama colour grade, deep rich tones">Prestige drama</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SECTION 5 — ADVANCED SETTINGS
+     ══════════════════════════════════ -->
+<div class="layer-label" style="margin-top:14px">Section 5 — Advanced Settings</div>
+<div class="form-section" id="sec-advanced">
+  <button class="section-toggle" onclick="toggleSection('sec-advanced')">
+    <div class="section-toggle-left">
+      <div class="section-toggle-icon">🔧</div>
+      <div><div class="section-toggle-title">Advanced Settings <span style="font-size:10px;color:#555;font-family:'DM Sans',sans-serif;font-weight:400;letter-spacing:0">— Optional</span></div><div class="section-toggle-meta">Eye type, skin texture, distinguishing marks</div></div>
+    </div>
+    <div class="section-arrow"><svg width="11" height="7" viewBox="0 0 11 7" fill="none" stroke="#888" stroke-width="1.7" stroke-linecap="round"><path d="M1 1l4.5 4.5L10 1"/></svg></div>
+  </button>
+  <div class="section-body">
+    <div class="form-grid">
+      <div class="field">
+        <label>Eye Type</label>
+        <select id="eye-shape">
+          <option value="">No preference</option>
+          <option value="almond-shaped eyes">Almond</option>
+          <option value="round eyes">Round</option>
+          <option value="hooded eyes">Hooded</option>
+          <option value="monolid eyes">Monolid</option>
+          <option value="upturned eyes">Upturned</option>
+          <option value="downturned eyes">Downturned</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Skin Texture Detail</label>
+        <select id="skin-texture">
+          <option value="clean smooth even skin">Clean and smooth</option>
+          <option value="visible pores natural skin texture">Visible pores</option>
+          <option value="micro-detail skin texture, subtle surface variation, natural imperfections">Micro-detail</option>
+          <option value="raw natural skin, visible freckles, natural imperfections, no smoothing">Raw natural</option>
+        </select>
+      </div>
       <div class="field field-full">
-        <div class="label-row"><label>Scene Detail</label><span class="optional-tag">Optional</span></div>
-        <input type="text" id="scene-detail" placeholder="e.g. dark leather seats, floor to ceiling windows, neon signs in background" />
+        <label>Distinguishing Marks</label>
+        <div class="checkbox-group" id="marks-group">
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="natural freckles across face"><span class="cb-check"></span>Natural freckles</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="small beauty mark on face"><span class="cb-check"></span>Beauty mark</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="subtle acne scars on skin"><span class="cb-check"></span>Subtle acne scars</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="faint natural laugh lines"><span class="cb-check"></span>Faint laugh lines</label>
+          <label class="cb-label" onclick="toggleCb(this,event)"><input type="checkbox" value="mole near lip"><span class="cb-check"></span>Mole near lip</label>
+          <label class="cb-label checked" id="marks-none" onclick="toggleNone('marks-none','marks-group',event)"><input type="checkbox" value="" checked><span class="cb-check">✓</span>None</label>
+        </div>
       </div>
     </div>
   </div>
@@ -901,6 +636,20 @@ footer span{color:#666}
 <div id="output">
   <div class="output-header">✦ Your 5 Professional Prompts</div>
   <div class="prompt-cards" id="promptCards"></div>
+</div>
+
+<!-- MOOD VARIATIONS -->
+<div id="moodPanel">
+  <div class="mood-panel-header">🎭 Mood Variations</div>
+  <p class="mood-panel-sub">Shift all 5 prompts instantly — adds a mood layer on top of your character settings.</p>
+  <div class="mood-btns">
+    <button class="btn-mood mood-dramatic" onclick="applyMood(this,'dramatic')"><span class="btn-mood-dot"></span>More Dramatic</button>
+    <button class="btn-mood mood-natural"  onclick="applyMood(this,'natural')"><span class="btn-mood-dot"></span>More Natural</button>
+    <button class="btn-mood mood-editorial" onclick="applyMood(this,'editorial')"><span class="btn-mood-dot"></span>More Editorial</button>
+    <button class="btn-mood mood-cinematic" onclick="applyMood(this,'cinematic')"><span class="btn-mood-dot"></span>More Cinematic</button>
+    <button class="btn-mood mood-commercial" onclick="applyMood(this,'commercial')"><span class="btn-mood-dot"></span>More Commercial</button>
+  </div>
+  <div class="mood-active-label" id="moodActiveLabel">Active mood: <span id="moodActiveName"></span> — <a href="#" style="color:#555;text-decoration:none" onclick="clearMood(event)">clear</a></div>
 </div>
 
 <!-- CHARACTER LOCK -->
@@ -1068,53 +817,44 @@ function readAllFields() {
     : `heterochromia, left ${eyeLeft.replace(' eyes','')} eye, right ${eyeRight} eye`;
 
   const hairColor   = val('hair-color');
-  const hairTexture = val('hair-texture');
-  const hairStyle   = val('hair-style');
-  const hairDesc    = [hairColor, hairTexture, hairStyle].filter(Boolean).join(', ');
+  const hairStyle   = val('hair-texture'); // hair-texture is now the hairstyle dropdown
+  const hairDesc    = [hairColor, hairStyle].filter(Boolean).join(', ');
 
-  const personality = getCheckedValues('personality-group');
   const marks       = getCheckedValues('marks-group');
   const accessories = getCheckedValues('acc-group');
 
   return {
-    // Layer 1
     gender:       val('gender'),
-    age:          val('age') || 'early 20s',
+    age:          val('age'),
     ethnicity:    val('ethnicity'),
-    faceShape:    val('face-shape'),
-    eyeShape:     val('eye-shape'),
+    eyeShape:     val('eye-shape'),       // Advanced
     eyeDesc,
-    eyeExpression: val('eye-expression'),
-    nose:         val('nose'),
-    lips:         val('lips'),
     skinTone:     val('skin-tone'),
-    skinTexture:  val('skin-texture'),
-    marks:        marks.join(', '),
+    skinTexture:  val('skin-texture'),    // Advanced
+    marks:        marks.join(', '),       // Advanced
     hairDesc:     hairDesc || 'natural hair',
     bodyType:     val('body-type'),
-    expression:   val('expression'),
-    gaze:         val('gaze'),
-    // Layer 2
+    expression:   'relaxed natural expression',
+    gaze:         'direct eye contact with camera',
     lightStyle:   val('light-style'),
-    lightTemp:    val('light-temp'),
-    lightDir:     val('light-dir'),
-    cameraBody:   val('camera-body'),
-    lens:         val('lens'),
-    aperture:     val('aperture'),
+    lightTemp:    '',
+    lightDir:     '',
+    cameraBody:   'Sony A7R V',
+    lens:         '85mm portrait prime lens',
+    aperture:     'f/1.4 shallow depth of field, creamy bokeh',
     camAngle:     val('cam-angle'),
     colorGrade:   val('color-grade'),
-    sharpness:    val('sharpness'),
-    // Layer 3
-    personality:  personality.join(', '),
-    niche:        val('niche'),
+    sharpness:    'tack sharp ultra detailed, maximum resolution',
+    personality:  '',
+    niche:        '',
     clothing:     val('clothing'),
     palette:      val('palette'),
     accessories:  accessories.join(', '),
-    pose:         val('pose'),
-    hands:        val('hands'),
-    object:       val('object'),
+    pose:         'standing relaxed natural pose',
+    hands:        '',
+    object:       '',
     location:     val('location'),
-    sceneDetail:  val('scene-detail'),
+    sceneDetail:  '',
   };
 }
 
@@ -1126,12 +866,8 @@ function buildSubjectBlock(f) {
     f.age,
     f.gender,
     f.bodyType,
-    f.faceShape,
     f.eyeShape,
     f.eyeDesc,
-    f.eyeExpression,
-    f.nose,
-    f.lips,
     f.skinTone,
     f.skinTexture,
     f.marks,
@@ -1339,7 +1075,7 @@ function generatePrompts() {
   });
 
   document.getElementById('lockCode').textContent = encodeCharacter(f);
-  ['output','lockSection','affiliates','gallery'].forEach(id => { document.getElementById(id).style.display = 'block'; });
+  ['output','lockSection','affiliates','gallery','moodPanel'].forEach(id => { document.getElementById(id).style.display = 'block'; });
   renderSavedChars();
   document.getElementById('output').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
@@ -1391,7 +1127,7 @@ function useSimpleVersion(btn) {
 // ─── CHARACTER LOCK SYSTEM ────────────────────────────────────────────────────
 
 // Ordered field IDs for encoding (dropdowns only — text inputs encoded separately)
-const ENCODE_SELECTS = ['gender','ethnicity','face-shape','eye-shape','eye-left','eye-right','eye-expression','nose','lips','skin-tone','skin-texture','body-type','expression','gaze','light-style','light-temp','light-dir','camera-body','lens','aperture','cam-angle','color-grade','sharpness','niche','clothing','palette','pose','hands','object','location'];
+const ENCODE_SELECTS = ['gender','age','ethnicity','skin-tone','eye-left','eye-right','eye-shape','skin-texture','hair-texture','body-type','clothing','palette','location','light-style','cam-angle','color-grade'];
 
 // Checkbox group IDs
 const CB_GROUPS = {
@@ -1431,16 +1167,13 @@ function encodeCharacter(f) {
   // Text inputs: base64url encode
   const enc = s => btoa(unescape(encodeURIComponent((s||'').slice(0,40)))).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
   const hairC  = enc(val('hair-color'));
-  const hairT_ = enc(val('hair-style'));
-  const sceneD = enc(val('scene-detail'));
-  const ageStr = enc(val('age'));
 
   // Human-readable prefix
-  const stylePfx = (val('clothing') || val('niche') || 'GEN').slice(0,3).toUpperCase().replace(/[^A-Z]/g,'').padEnd(3,'X');
+  const stylePfx = (val('clothing') || 'GEN').slice(0,3).toUpperCase().replace(/[^A-Z]/g,'').padEnd(3,'X');
   const skinPfx  = (val('skin-tone') || 'MED').slice(11,14).toUpperCase().replace(/[^A-Z]/g,'').padEnd(3,'X');
 
   const payload = `${selectVals}${marksBits.toString(16).padStart(2,'0')}${persBits.toString(16).padStart(3,'0')}${accBits.toString(16).padStart(2,'0')}${platIdx}`;
-  return `${stylePfx}-${payload}-${skinPfx}.${hairC}.${hairT_}.${sceneD}.${ageStr}`;
+  return `${stylePfx}-${payload}-${skinPfx}.${hairC}`;
 }
 
 function decodeCharacter(code) {
@@ -1449,9 +1182,6 @@ function decodeCharacter(code) {
     const dotParts = code.split('.');
     const main     = dotParts[0];
     const hairC    = dotParts[1] || '';
-    const hairT_   = dotParts[2] || '';
-    const sceneD   = dotParts[3] || '';
-    const ageStr   = dotParts[4] || '';
 
     const dashParts = main.split('-');
     if (dashParts.length < 3) return null;
@@ -1478,15 +1208,11 @@ function decodeCharacter(code) {
     // Decode checkbox bitmasks
     const marksEls = [...document.querySelectorAll('#marks-group .cb-label:not([id$="-none"]) input')];
     state._marks = marksEls.filter((_, i) => (marksBits >> i) & 1).map(x => x.value);
-    const persEls = [...document.querySelectorAll('#personality-group .cb-label input')];
-    state._personality = persEls.filter((_, i) => (persBits >> i) & 1).map(x => x.value);
+    state._personality = [];
     const accEls = [...document.querySelectorAll('#acc-group .cb-label:not([id$="-none"]) input')];
     state._acc = accEls.filter((_, i) => (accBits >> i) & 1).map(x => x.value);
 
     state['hair-color']   = dec(hairC);
-    state['hair-style']   = dec(hairT_);
-    state['scene-detail'] = dec(sceneD);
-    state['age']          = dec(ageStr);
     state._platform       = ['Instagram','TikTok','YouTube'][platIdx] || 'Instagram';
 
     return state;
@@ -1501,7 +1227,7 @@ function applyState(state) {
     if (el && state[id] !== undefined) el.value = state[id];
   });
   // Text inputs
-  ['hair-color','hair-style','scene-detail','age'].forEach(id => {
+  ['hair-color'].forEach(id => {
     const el = document.getElementById(id);
     if (el && state[id] !== undefined) el.value = state[id];
   });
@@ -1518,7 +1244,6 @@ function applyState(state) {
     });
   }
   applyCheckboxes('marks-group', 'marks-none', state._marks || []);
-  applyCheckboxes('personality-group', null, state._personality || []);
   applyCheckboxes('acc-group', 'acc-none', state._acc || []);
 
   // Platform
@@ -1530,15 +1255,11 @@ function applyState(state) {
   });
 
   // Auto-expand sections that have data
-  const expand = (id) => document.getElementById(id) && document.getElementById(id).classList.add('open');
-  if (state['face-shape'] || state['eye-shape'] || state['eye-expression']) expand('sec-face');
-  if (state['skin-tone']  || (state._marks||[]).length) expand('sec-skin');
-  if (state['hair-color'] || state['hair-style']) expand('sec-hair');
-  if (state['body-type']  || state['expression']) expand('sec-body');
-  if (state['light-temp'] || state['light-dir'])  expand('sec-lighting');
-  if (state['color-grade']) expand('sec-post');
-  if ((state._personality||[]).length || state['niche']) expand('sec-personality');
+  const expand = (id) => { const el = document.getElementById(id); if (el) el.classList.add('open'); };
+  if (state['skin-tone'] || (state._marks||[]).length) expand('sec-look');
   if (state['clothing'] || (state._acc||[]).length) expand('sec-fashion');
+  if (state['location'] || state['light-style']) expand('sec-scene');
+  if (state['eye-shape'] || state['skin-texture']) expand('sec-advanced');
 }
 
 // ─── LOAD / SAVE ──────────────────────────────────────────────────────────────
@@ -1910,8 +1631,73 @@ function setVtFilter(btn) {
   renderTemplateGrid();
 }
 
-// Init templates
-renderTemplateGrid();
+// ─── MOOD VARIATIONS ─────────────────────────────────────────────────────────
+
+const MOOD_TOKENS = {
+  dramatic:   'dramatic high-contrast lighting, deep shadow play, intense emotional tension, chiaroscuro shadows, cinematic red and amber tones, powerful presence, dark brooding atmosphere, sharp edge lighting',
+  natural:    'soft natural daylight, organic unposed energy, documentary authenticity, gentle forest green ambient tones, earthy warm tones, relaxed genuine moment, imperfect real life texture, no artificial lighting',
+  editorial:  'clean editorial composition, magazine-quality framing, bold fashion forward styling, graphic strong lines, high fashion white light, stark contrast, sharp tack detail, Vogue editorial energy',
+  cinematic:  'cinematic anamorphic lens flare, deep blue teal colour grade, widescreen cinematic atmosphere, film grain, Hollywood blockbuster lighting, deep shadow separation, epic moody sky, photochemical film look',
+  commercial: 'bright optimistic lighting, warm golden brand aesthetic, polished aspirational feel, clean product-ready composition, glowing skin highlight, broad commercial appeal, lifestyle brand energy, premium feel',
+};
+
+const MOOD_LABELS = {
+  dramatic: 'More Dramatic', natural: 'More Natural', editorial: 'More Editorial',
+  cinematic: 'More Cinematic', commercial: 'More Commercial',
+};
+
+let activeMood = null;
+
+function applyMood(btn, mood) {
+  // Toggle off if same mood clicked again
+  if (activeMood === mood) { clearMood(); return; }
+  activeMood = mood;
+
+  // Update button states
+  document.querySelectorAll('.btn-mood').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  // Show active label
+  document.getElementById('moodActiveName').textContent = MOOD_LABELS[mood];
+  document.getElementById('moodActiveLabel').style.display = 'block';
+
+  // Re-apply to all visible prompt cards
+  rebuildPromptsWithMood();
+}
+
+function clearMood(e) {
+  if (e) e.preventDefault();
+  activeMood = null;
+  document.querySelectorAll('.btn-mood').forEach(b => b.classList.remove('active'));
+  document.getElementById('moodActiveLabel').style.display = 'none';
+  rebuildPromptsWithMood();
+}
+
+function rebuildPromptsWithMood() {
+  // Regenerate base prompts from stored fields, then overlay mood
+  if (!window._lastFields) return;
+  const fresh = buildAllPrompts(window._lastFields);
+
+  // If a template is active, prepend it too
+  const tpl = activeTemplate ? activeTemplate.prompt + ', ' : '';
+
+  for (let i = 0; i < 5; i++) {
+    const el = document.getElementById('ptext-' + i);
+    if (!el) continue;
+    const base = tpl + fresh[i];
+    el.textContent = activeMood ? base + ', ' + MOOD_TOKENS[activeMood] : base;
+  }
+}
+
+// Also reset mood display whenever prompts are freshly generated
+const _origGenerate = window.generatePrompts;
+window.generatePrompts = function() {
+  activeMood = null;
+  document.querySelectorAll('.btn-mood').forEach(b => b.classList.remove('active'));
+  document.getElementById('moodActiveLabel').style.display = 'none';
+  _origGenerate();
+};
+
 </script>
 </body>
 </html>
